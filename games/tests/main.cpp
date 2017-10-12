@@ -1,7 +1,24 @@
-#include "engine.h"
+#include "os/os.h"
 
-void gameMain()
+namespace game
 {
-    engine::startup();
-    engine::shutdown();
+
+void configure()
+{
+    os::setWindowName("Scant Tests");
+    os::setWindowFullscreen(false);
+}
+
+void startup()
+{
+}
+
+void update()
+{
+}
+
+void shutdown()
+{
+}
+
 }

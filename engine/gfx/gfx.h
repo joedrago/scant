@@ -4,8 +4,11 @@
 namespace gfx
 {
 
-void startup();
+bool startup();
 void shutdown();
+
+void begin();
+void end();
 
 }
 

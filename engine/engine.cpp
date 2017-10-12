@@ -8,12 +8,16 @@
 namespace engine
 {
 
-void startup()
+bool startup()
 {
     os::startup();
-    gfx::startup();
+    if(!gfx::startup()) {
+        os::shutdown();
+        return false;
+    }
     input::startup();
     sound::startup();
+    return true;
 }
 
 void shutdown()
@@ -22,6 +26,16 @@ void shutdown()
     input::shutdown();
     gfx::shutdown();
     os::shutdown();
+}
+
+void begin()
+{
+    gfx::begin();
+}
+
+void end()
+{
+    gfx::end();
 }
 
 }

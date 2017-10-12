@@ -7,9 +7,10 @@ set(ENGINE_SRCS
 
     os/file.cpp
     os/file.h
-    os/main.cpp
     os/os.cpp
     os/os.h
+    os/window.cpp
+    os/window.h
 
     sound/sound.cpp
     sound/sound.h
