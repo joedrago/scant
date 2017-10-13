@@ -22,7 +22,7 @@ void startup()
         for (int i = 0; i < 256; ++i) {
             unsigned char * pixel = pixels + (i * 4) + (j * metrics.pitch);
             pixel[0] = 255;
-            pixel[1] = 0;
+            pixel[1] = i;
             pixel[2] = j;
             pixel[3] = 255;
         }
