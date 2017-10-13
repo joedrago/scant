@@ -108,7 +108,7 @@ bool startup()
         }
     }
     if (FAILED(hr))
-        return hr;
+        return false;
 
     // Create swap chain
     IDXGIFactory2 * dxgiFactory2 = nullptr;
@@ -161,18 +161,18 @@ bool startup()
     dxgiFactory->Release();
 
     if (FAILED(hr))
-        return hr;
+        return false;
 
     // Create a render target view
     ID3D11Texture2D * pBackBuffer = nullptr;
     hr = d3dSwapChain_->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void **>( &pBackBuffer ) );
     if (FAILED(hr) )
-        return hr;
+        return false;
 
     hr = d3dDevice_->CreateRenderTargetView(pBackBuffer, nullptr, &d3dRenderTargetView_);
     pBackBuffer->Release();
     if (FAILED(hr) )
-        return hr;
+        return false;
 
     d3dContext_->OMSetRenderTargets(1, &d3dRenderTargetView_, nullptr);
 
@@ -224,16 +224,16 @@ bool startup()
 
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(bd) );
-    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.Usage = D3D11_USAGE_DYNAMIC;
     bd.ByteWidth = sizeof( PosTexColorVertex ) * 4;
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bd.CPUAccessFlags = 0;
+    bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     D3D11_SUBRESOURCE_DATA InitData;
     ZeroMemory(&InitData, sizeof(InitData) );
     InitData.pSysMem = vertices;
     hr = d3dDevice_->CreateBuffer(&bd, &InitData, &d3dVertexBuffer_);
     if (FAILED(hr) )
-        return hr;
+        return false;
 
     // Set vertex buffer
     UINT stride = sizeof( PosTexColorVertex );
@@ -277,15 +277,67 @@ void begin()
 {
     float clearColor[4] = { 0, 0, 0, 0 };
     d3dContext_->ClearRenderTargetView(d3dRenderTargetView_, clearColor);
-
-    d3dContext_->VSSetShader(d3dVertexShader_, nullptr, 0);
-    d3dContext_->PSSetShader(d3dPixelShader_, nullptr, 0);
-    d3dContext_->Draw(4, 0);
 }
 
 void end()
 {
-    d3dSwapChain_->Present(0, 0);
+    d3dSwapChain_->Present(1, 0);
+}
+
+void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource *source, Color *color, float anchorX, float anchorY, float r)
+{
+    float windowW = (float)os::windowWidth();
+    float windowH = (float)os::windowHeight();
+
+    float leftPos   = (2.0f *         ( pixelX            / windowW))  - 1.0f;
+    float topPos    = (2.0f * (1.0f - ( pixelY            / windowH))) - 1.0f;
+    float rightPos  = (2.0f *         ((pixelX + pixelW)  / windowW))  - 1.0f;
+    float bottomPos = (2.0f * (1.0f - ((pixelY + pixelH)) / windowH))  - 1.0f;
+
+    // TODO: account for anchor and rotation
+
+    float red, green, blue, alpha;
+    if(color) {
+        red   = (float)color->r / 255.0f;
+        green = (float)color->g / 255.0f;
+        blue  = (float)color->b / 255.0f;
+        alpha = (float)color->a / 255.0f;
+    } else {
+        red = 1.0f;
+        green = 1.0f;
+        blue = 1.0f;
+        alpha = 1.0f;
+    }
+
+    float leftUV, topUV, rightUV, bottomUV;
+    if(source) {
+        // TODO: deal with textures
+        leftUV   = 0.0f;
+        topUV    = 0.0f;
+        rightUV  = 0.0f;
+        bottomUV = 0.0f;
+    } else {
+        leftUV   = 0.0f;
+        topUV    = 0.0f;
+        rightUV  = 0.0f;
+        bottomUV = 0.0f;
+    }
+
+    PosTexColorVertex vertices[] = {
+        { leftPos,  bottomPos, 0.5f,   leftUV,  bottomUV,   red, green, blue, alpha }, // bottom left
+        { leftPos,  topPos,    0.5f,   leftUV,  topUV,      red, green, blue, alpha }, // top left
+        { rightPos, bottomPos, 0.5f,   rightUV, bottomUV,   red, green, blue, alpha }, // bottom right
+        { rightPos, topPos,    0.5f,   rightUV, topUV,      red, green, blue, alpha }  // top right
+    };
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    memset(&mappedResource, 0, sizeof(D3D11_MAPPED_SUBRESOURCE));
+    d3dContext_->Map(d3dVertexBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    memcpy(mappedResource.pData, vertices, sizeof(vertices));
+    d3dContext_->Unmap(d3dVertexBuffer_, 0);
+
+    d3dContext_->VSSetShader(d3dVertexShader_, nullptr, 0);
+    d3dContext_->PSSetShader(d3dPixelShader_, nullptr, 0);
+    d3dContext_->Draw(4, 0);
 }
 
 }

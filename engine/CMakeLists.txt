@@ -10,7 +10,6 @@ set(ENGINE_SRCS
     os/os.cpp
     os/os.h
     os/window.cpp
-    os/window.h
 
     sound/sound.cpp
     sound/sound.h
@@ -24,7 +23,7 @@ add_library(engine
 )
 
 macro(add_game GAME SRCS)
-    message(status "Adding game ${GAME}...")
+    message(STATUS "Adding game: ${GAME}")
     add_executable(${GAME} ${SRCS})
     target_link_libraries(${GAME} engine)
     set_target_properties(${GAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")

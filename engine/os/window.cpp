@@ -117,6 +117,16 @@ void setWindowFullscreen(bool fullscreen)
     windowFullscreen_ = fullscreen;
 }
 
+int windowWidth()
+{
+    return windowWidth_;
+}
+
+int windowHeight()
+{
+    return windowHeight_;
+}
+
 HWND windowHandle()
 {
     return hwnd_;
