@@ -225,7 +225,7 @@ bool startup()
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(bd) );
     bd.Usage = D3D11_USAGE_DYNAMIC;
-    bd.ByteWidth = sizeof( PosTexColorVertex ) * 4;
+    bd.ByteWidth = sizeof(vertices);
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     D3D11_SUBRESOURCE_DATA InitData;
