@@ -9,7 +9,7 @@ namespace os
 void startup();
 void shutdown();
 
-void printf(const char *format, ...);
+void printf(const char * format, ...);
 
 void setWindowName(const char * windowName);
 void setWindowFullscreen(bool fullscreen);

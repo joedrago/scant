@@ -27,7 +27,7 @@ ret
 // Approximately 2 instruction slots used
 #endif
 
-const BYTE Shader_PSYellow[] =
+const BYTE Shader_PSColor[] =
 {
      68,  88,  66,  67, 140, 190, 
     200,  44, 112, 168, 231,  10, 

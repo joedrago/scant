@@ -8,6 +8,8 @@
 #include <d3d11_1.h>
 #include <directxmath.h>
 
+#include <vector>
+
 // So wrong, but oh so right. The naughtiest.
 #pragma comment (lib, "D3D11.lib")
 
@@ -21,21 +23,31 @@ static IDXGISwapChain * d3dSwapChain_ = nullptr;
 static IDXGISwapChain1 * d3dSwapChain1_ = nullptr;
 static ID3D11RenderTargetView * d3dRenderTargetView_ = nullptr;
 static ID3D11VertexShader * d3dVertexShader_ = nullptr;
-static ID3D11PixelShader * d3dPixelShader_ = nullptr;
+static ID3D11PixelShader * d3dColorPixelShader_ = nullptr;
+static ID3D11PixelShader * d3dTextureColorPixelShader_ = nullptr;
 static ID3D11InputLayout * d3dVertexLayout_ = nullptr;
 static ID3D11Buffer * d3dVertexBuffer_ = nullptr;
 
+struct TextureRecord
+{
+    int width;
+    int height;
+    ID3D11Texture2D * d3dTexture;
+    ID3D11ShaderResourceView * d3dTextureView;
+};
+static std::vector<TextureRecord> textures_;
+
 struct PosTexColorVertex
 {
-    float x_;
-    float y_;
-    float z_;
-    float u_;
-    float v_;
-    float r_;
-    float g_;
-    float b_;
-    float a_;
+    float x;
+    float y;
+    float z;
+    float u;
+    float v;
+    float r;
+    float g;
+    float b;
+    float a;
 };
 
 namespace gfx
@@ -86,22 +98,22 @@ bool startup()
                 D3D11_SDK_VERSION, &d3dDevice_, &d3dFeatureLevel_, &d3dContext_);
         }
 
-        if (SUCCEEDED(hr) )
+        if (SUCCEEDED(hr))
             break;
     }
-    if (FAILED(hr) )
+    if (FAILED(hr))
         return false;
 
     // Obtain DXGI factory from device (since we used nullptr for pAdapter above)
     IDXGIFactory1 * dxgiFactory = nullptr;
     {
         IDXGIDevice * dxgiDevice = nullptr;
-        hr = d3dDevice_->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void **>(&dxgiDevice) );
+        hr = d3dDevice_->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void **>(&dxgiDevice));
         if (SUCCEEDED(hr)) {
             IDXGIAdapter * adapter = nullptr;
             hr = dxgiDevice->GetAdapter(&adapter);
             if (SUCCEEDED(hr)) {
-                hr = adapter->GetParent(__uuidof(IDXGIFactory1), reinterpret_cast<void **>(&dxgiFactory) );
+                hr = adapter->GetParent(__uuidof(IDXGIFactory1), reinterpret_cast<void **>(&dxgiFactory));
                 adapter->Release();
             }
             dxgiDevice->Release();
@@ -112,12 +124,12 @@ bool startup()
 
     // Create swap chain
     IDXGIFactory2 * dxgiFactory2 = nullptr;
-    hr = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), reinterpret_cast<void **>(&dxgiFactory2) );
+    hr = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), reinterpret_cast<void **>(&dxgiFactory2));
     if (dxgiFactory2) {
         // DirectX 11.1 or later
-        hr = d3dDevice_->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void **>(&d3dDevice1_) );
+        hr = d3dDevice_->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void **>(&d3dDevice1_));
         if (SUCCEEDED(hr)) {
-            (void)d3dContext_->QueryInterface(__uuidof(ID3D11DeviceContext1), reinterpret_cast<void **>(&d3dContext1_) );
+            (void)d3dContext_->QueryInterface(__uuidof(ID3D11DeviceContext1), reinterpret_cast<void **>(&d3dContext1_));
         }
 
         DXGI_SWAP_CHAIN_DESC1 sd;
@@ -132,7 +144,7 @@ bool startup()
 
         hr = dxgiFactory2->CreateSwapChainForHwnd(d3dDevice_, hwnd, &sd, nullptr, nullptr, &d3dSwapChain1_);
         if (SUCCEEDED(hr)) {
-            hr = d3dSwapChain1_->QueryInterface(__uuidof(IDXGISwapChain), reinterpret_cast<void **>(&d3dSwapChain_) );
+            hr = d3dSwapChain1_->QueryInterface(__uuidof(IDXGISwapChain), reinterpret_cast<void **>(&d3dSwapChain_));
         }
 
         dxgiFactory2->Release();
@@ -165,13 +177,13 @@ bool startup()
 
     // Create a render target view
     ID3D11Texture2D * pBackBuffer = nullptr;
-    hr = d3dSwapChain_->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void **>( &pBackBuffer ) );
-    if (FAILED(hr) )
+    hr = d3dSwapChain_->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void **>( &pBackBuffer ));
+    if (FAILED(hr))
         return false;
 
     hr = d3dDevice_->CreateRenderTargetView(pBackBuffer, nullptr, &d3dRenderTargetView_);
     pBackBuffer->Release();
-    if (FAILED(hr) )
+    if (FAILED(hr))
         return false;
 
     d3dContext_->OMSetRenderTargets(1, &d3dRenderTargetView_, nullptr);
@@ -186,53 +198,73 @@ bool startup()
     vp.TopLeftY = 0;
     d3dContext_->RSSetViewports(1, &vp);
 
+    // Setup blend state
+    D3D11_BLEND_DESC sourceOver;
+    ZeroMemory(&sourceOver, sizeof(sourceOver));
+    sourceOver.RenderTarget[0].BlendEnable = TRUE;
+    sourceOver.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    sourceOver.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    sourceOver.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    sourceOver.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+    sourceOver.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+    sourceOver.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    sourceOver.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    ID3D11BlendState * blendState = nullptr;
+    d3dDevice_->CreateBlendState(&sourceOver, &blendState);
+    assert(blendState != nullptr);
+    d3dContext_->OMSetBlendState(blendState, nullptr, 0xffffffff);
+    blendState->Release();
+
     // Create the vertex shader
     hr = d3dDevice_->CreateVertexShader(Shader_VSPos, sizeof(Shader_VSPos), nullptr, &d3dVertexShader_);
-    if (FAILED(hr) ) {
+    if (FAILED(hr)) {
         return false;
     }
 
     // Define the input layout
     D3D11_INPUT_ELEMENT_DESC layout[] =
     {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
     UINT numElements = ARRAYSIZE(layout);
 
     // Create the input layout
     hr = d3dDevice_->CreateInputLayout(layout, numElements, Shader_VSPos, sizeof(Shader_VSPos), &d3dVertexLayout_);
-    if (FAILED(hr) )
+    if (FAILED(hr))
         return false;
 
     // Set the input layout
     d3dContext_->IASetInputLayout(d3dVertexLayout_);
 
-    // Create the pixel shader
-    hr = d3dDevice_->CreatePixelShader(Shader_PSYellow, sizeof(Shader_PSYellow), nullptr, &d3dPixelShader_);
-    if (FAILED(hr) )
+    // Create the pixel shaders
+    hr = d3dDevice_->CreatePixelShader(Shader_PSColor, sizeof(Shader_PSColor), nullptr, &d3dColorPixelShader_);
+    if (FAILED(hr))
+        return false;
+    hr = d3dDevice_->CreatePixelShader(Shader_PSTextureColor, sizeof(Shader_PSTextureColor), nullptr, &d3dTextureColorPixelShader_);
+    if (FAILED(hr))
         return false;
 
     // Create vertex buffer
     PosTexColorVertex vertices[] = {
-        { 0.0f, 0.0f, 0.5f,     0, 0,     1, 0, 0, 1 }, // bottom left
-        { 0.0f, 0.5f, 0.5f,     0, 0,     1, 0, 0, 1 }, // top left
-        { 0.5f, 0.0f, 0.5f,     0, 0,     1, 0, 0, 1 }, // bottom right
-        { 0.5f, 0.5f, 0.5f,     0, 0,     1, 0, 0, 1 }  // top right
+        { 0.0f, 0.0f, 0.5f, 0, 0, 1, 0, 0, 1 }, // bottom left
+        { 0.0f, 0.5f, 0.5f, 0, 0, 1, 0, 0, 1 }, // top left
+        { 0.5f, 0.0f, 0.5f, 0, 0, 1, 0, 0, 1 }, // bottom right
+        { 0.5f, 0.5f, 0.5f, 0, 0, 1, 0, 0, 1 } // top right
     };
 
     D3D11_BUFFER_DESC bd;
-    ZeroMemory(&bd, sizeof(bd) );
+    ZeroMemory(&bd, sizeof(bd));
     bd.Usage = D3D11_USAGE_DYNAMIC;
     bd.ByteWidth = sizeof(vertices);
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     D3D11_SUBRESOURCE_DATA InitData;
-    ZeroMemory(&InitData, sizeof(InitData) );
+    ZeroMemory(&InitData, sizeof(InitData));
     InitData.pSysMem = vertices;
     hr = d3dDevice_->CreateBuffer(&bd, &InitData, &d3dVertexBuffer_);
-    if (FAILED(hr) )
+    if (FAILED(hr))
         return false;
 
     // Set vertex buffer
@@ -247,6 +279,8 @@ bool startup()
 
 void shutdown()
 {
+    // TODO: release textures_ and textures_.clear()
+
     if (d3dContext_)
         d3dContext_->ClearState();
     if (d3dVertexBuffer_)
@@ -255,8 +289,10 @@ void shutdown()
         d3dVertexLayout_->Release();
     if (d3dVertexShader_)
         d3dVertexShader_->Release();
-    if (d3dPixelShader_)
-        d3dPixelShader_->Release();
+    if (d3dColorPixelShader_)
+        d3dColorPixelShader_->Release();
+    if (d3dTextureColorPixelShader_)
+        d3dTextureColorPixelShader_->Release();
     if (d3dRenderTargetView_)
         d3dRenderTargetView_->Release();
     if (d3dSwapChain1_)
@@ -284,20 +320,78 @@ void end()
     d3dSwapChain_->Present(1, 0);
 }
 
-void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource *source, Color *color, float anchorX, float anchorY, float r)
+int createTexture(int width, int height)
+{
+    HRESULT hr;
+
+    TextureRecord tr;
+    tr.width = width;
+    tr.height = height;
+
+    D3D11_TEXTURE2D_DESC desc;
+    ZeroMemory(&desc, sizeof(desc));
+    desc.Width = width;
+    desc.Height = height;
+    desc.MipLevels = desc.ArraySize = 1;
+    desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    desc.SampleDesc.Count = 1;
+    desc.Usage = D3D11_USAGE_DYNAMIC;
+    desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    desc.MiscFlags = 0;
+    hr = d3dDevice_->CreateTexture2D(&desc, NULL, &tr.d3dTexture);
+    assert((hr == S_OK) && (tr.d3dTexture != nullptr));
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC srDesc;
+    srDesc.Format = desc.Format;
+    srDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
+    srDesc.Texture2D.MostDetailedMip = 0;
+    srDesc.Texture2D.MipLevels = 1;
+    hr = d3dDevice_->CreateShaderResourceView(tr.d3dTexture, &srDesc, &tr.d3dTextureView);
+    assert((hr == S_OK) && (tr.d3dTextureView != nullptr));
+
+    int id = (int)textures_.size();
+    textures_.push_back(tr);
+    return 0;
+}
+
+unsigned char * lockTexture(int id, TextureMetrics * outMetrics)
+{
+    assert((id >= 0) && (id < textures_.size()));
+
+    TextureRecord & tr = textures_[id];
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    memset(&mappedResource, 0, sizeof(D3D11_MAPPED_SUBRESOURCE));
+    d3dContext_->Map(tr.d3dTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+    outMetrics->width = tr.width;
+    outMetrics->height = tr.height;
+    outMetrics->pitch = mappedResource.RowPitch;
+    return (unsigned char *)mappedResource.pData;
+}
+
+void unlockTexture(int id)
+{
+    assert((id >= 0) && (id < textures_.size()));
+
+    TextureRecord & tr = textures_[id];
+    d3dContext_->Unmap(tr.d3dTexture, 0);
+}
+
+void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource * source, Color * color, float anchorX, float anchorY, float r)
 {
     float windowW = (float)os::windowWidth();
     float windowH = (float)os::windowHeight();
 
-    float leftPos   = (2.0f *         ( pixelX            / windowW))  - 1.0f;
-    float topPos    = (2.0f * (1.0f - ( pixelY            / windowH))) - 1.0f;
-    float rightPos  = (2.0f *         ((pixelX + pixelW)  / windowW))  - 1.0f;
-    float bottomPos = (2.0f * (1.0f - ((pixelY + pixelH)) / windowH))  - 1.0f;
+    float leftPos   = (2.0f * ( pixelX / windowW)) - 1.0f;
+    float topPos    = (2.0f * (1.0f - ( pixelY / windowH))) - 1.0f;
+    float rightPos  = (2.0f * ((pixelX + pixelW) / windowW)) - 1.0f;
+    float bottomPos = (2.0f * (1.0f - ((pixelY + pixelH)) / windowH)) - 1.0f;
 
     // TODO: account for anchor and rotation
 
     float red, green, blue, alpha;
-    if(color) {
+    if (color) {
         red   = (float)color->r / 255.0f;
         green = (float)color->g / 255.0f;
         blue  = (float)color->b / 255.0f;
@@ -309,34 +403,47 @@ void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource *so
         alpha = 1.0f;
     }
 
+    d3dContext_->VSSetShader(d3dVertexShader_, nullptr, 0);
+
     float leftUV, topUV, rightUV, bottomUV;
-    if(source) {
-        // TODO: deal with textures
-        leftUV   = 0.0f;
-        topUV    = 0.0f;
-        rightUV  = 0.0f;
-        bottomUV = 0.0f;
+    if (source) {
+        d3dContext_->PSSetShader(d3dTextureColorPixelShader_, nullptr, 0);
+
+        assert((source->textureId >= 0) && (source->textureId < textures_.size()));
+        TextureRecord & tr = textures_[source->textureId];
+        d3dContext_->PSSetShaderResources(0, 1, &tr.d3dTextureView);
+
+        leftUV   =  source->x / (float)tr.width;
+        topUV    =  source->y / (float)tr.height;
+        rightUV  = (source->x + source->w) / (float)tr.width;
+        bottomUV = (source->y + source->h) / (float)tr.height;
     } else {
+        d3dContext_->PSSetShader(d3dColorPixelShader_, nullptr, 0);
+
+        ID3D11ShaderResourceView * unbindView = nullptr;
+        d3dContext_->PSSetShaderResources(0, 1, &unbindView);
+
         leftUV   = 0.0f;
         topUV    = 0.0f;
         rightUV  = 0.0f;
         bottomUV = 0.0f;
     }
 
+// *INDENT-OFF*
     PosTexColorVertex vertices[] = {
         { leftPos,  bottomPos, 0.5f,   leftUV,  bottomUV,   red, green, blue, alpha }, // bottom left
         { leftPos,  topPos,    0.5f,   leftUV,  topUV,      red, green, blue, alpha }, // top left
         { rightPos, bottomPos, 0.5f,   rightUV, bottomUV,   red, green, blue, alpha }, // bottom right
         { rightPos, topPos,    0.5f,   rightUV, topUV,      red, green, blue, alpha }  // top right
     };
+// *INDENT-ON*
+
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     memset(&mappedResource, 0, sizeof(D3D11_MAPPED_SUBRESOURCE));
     d3dContext_->Map(d3dVertexBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     memcpy(mappedResource.pData, vertices, sizeof(vertices));
     d3dContext_->Unmap(d3dVertexBuffer_, 0);
 
-    d3dContext_->VSSetShader(d3dVertexShader_, nullptr, 0);
-    d3dContext_->PSSetShader(d3dPixelShader_, nullptr, 0);
     d3dContext_->Draw(4, 0);
 }
 
