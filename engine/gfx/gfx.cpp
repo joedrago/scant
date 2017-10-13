@@ -25,9 +25,17 @@ static ID3D11PixelShader * d3dPixelShader_ = nullptr;
 static ID3D11InputLayout * d3dVertexLayout_ = nullptr;
 static ID3D11Buffer * d3dVertexBuffer_ = nullptr;
 
-struct SimpleVertex
+struct PosTexColorVertex
 {
-    DirectX::XMFLOAT3 Pos;
+    float x_;
+    float y_;
+    float z_;
+    float u_;
+    float v_;
+    float r_;
+    float g_;
+    float b_;
+    float a_;
 };
 
 namespace gfx
@@ -187,7 +195,9 @@ bool startup()
     // Define the input layout
     D3D11_INPUT_ELEMENT_DESC layout[] =
     {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
     UINT numElements = ARRAYSIZE(layout);
 
@@ -205,16 +215,17 @@ bool startup()
         return false;
 
     // Create vertex buffer
-    SimpleVertex vertices[] =
-    {
-        DirectX::XMFLOAT3(0.0f, 0.5f, 0.5f),
-        DirectX::XMFLOAT3(0.5f, -0.5f, 0.5f),
-        DirectX::XMFLOAT3(-0.5f, -0.5f, 0.5f),
+    PosTexColorVertex vertices[] = {
+        { 0.0f, 0.0f, 0.5f,     0, 0,     1, 0, 0, 1 }, // bottom left
+        { 0.0f, 0.5f, 0.5f,     0, 0,     1, 0, 0, 1 }, // top left
+        { 0.5f, 0.0f, 0.5f,     0, 0,     1, 0, 0, 1 }, // bottom right
+        { 0.5f, 0.5f, 0.5f,     0, 0,     1, 0, 0, 1 }  // top right
     };
+
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(bd) );
     bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof( SimpleVertex ) * 3;
+    bd.ByteWidth = sizeof( PosTexColorVertex ) * 4;
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bd.CPUAccessFlags = 0;
     D3D11_SUBRESOURCE_DATA InitData;
@@ -225,12 +236,12 @@ bool startup()
         return hr;
 
     // Set vertex buffer
-    UINT stride = sizeof( SimpleVertex );
+    UINT stride = sizeof( PosTexColorVertex );
     UINT offset = 0;
     d3dContext_->IASetVertexBuffers(0, 1, &d3dVertexBuffer_, &stride, &offset);
 
     // Set primitive topology
-    d3dContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    d3dContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     return true;
 }
 
@@ -269,7 +280,7 @@ void begin()
 
     d3dContext_->VSSetShader(d3dVertexShader_, nullptr, 0);
     d3dContext_->PSSetShader(d3dPixelShader_, nullptr, 0);
-    d3dContext_->Draw(3, 0);
+    d3dContext_->Draw(4, 0);
 }
 
 void end()
