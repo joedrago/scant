@@ -1,0 +1,14 @@
+{
+  "name": "spritesheet",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "async": "^2.5.0",
+    "coffee-script": "^1.12.7",
+    "png-js": "*",
+    "pngjs": "*"
+  },
+  "scripts": {
+    "packtests": "coffee spritesheet.coffee ../../games/tests"
+  }
+}
