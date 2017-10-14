@@ -30,6 +30,7 @@ void shutdown()
 
 void begin()
 {
+    input::update();
     gfx::begin();
 }
 

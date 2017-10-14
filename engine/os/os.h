@@ -10,6 +10,8 @@ namespace os
 void startup();
 void shutdown();
 
+void quit();
+
 void printf(const char * format, ...);
 
 void setWindowName(const char * windowName);

@@ -1,4 +1,5 @@
 #include "gfx/gfx.h"
+#include "input/input.h"
 #include "os/os.h"
 
 namespace game
@@ -8,6 +9,8 @@ int homemadeID_;
 
 gfx::DrawSource loadedSource_;
 int loadedID_;
+float loadedX_ = 400.0f;
+float loadedY_ = 300.0f;
 
 void configure()
 {
@@ -41,6 +44,23 @@ void startup()
 
 void update()
 {
+    if(input::released(input::START)) {
+        os::quit();
+    }
+
+    if(input::held(input::LEFT)) {
+        loadedX_ -= 1.0f;
+    }
+    if(input::held(input::RIGHT)) {
+        loadedX_ += 1.0f;
+    }
+    if(input::held(input::UP)) {
+        loadedY_ -= 1.0f;
+    }
+    if(input::held(input::DOWN)) {
+        loadedY_ += 1.0f;
+    }
+
     gfx::Color c1 = { 255, 128, 0, 255 };
     gfx::draw(10, 10, 100, 100, nullptr, &c1);
 
@@ -55,7 +75,7 @@ void update()
     src.h = 256;
     gfx::draw(400, 10, 256, 256, &src);
 
-    gfx::draw(400, 300, loadedSource_.w, loadedSource_.h, &loadedSource_);
+    gfx::draw(loadedX_, loadedY_, (float)loadedSource_.w, (float)loadedSource_.h, &loadedSource_);
 }
 
 void shutdown()

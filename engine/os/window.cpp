@@ -132,4 +132,9 @@ HWND windowHandle()
     return hwnd_;
 }
 
+void quit()
+{
+    PostQuitMessage(0);
+}
+
 }

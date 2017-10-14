@@ -471,8 +471,8 @@ int loadPNG(const char * path, TextureMetrics * outMetrics)
     png_read_update_info(png, info);
 
     png_bytep * row_pointers = (png_bytep *)malloc(sizeof(png_bytep) * height);
-    int rowBytes = png_get_rowbytes(png, info);
-    for (unsigned int y = 0; y < height; y++) {
+    int rowBytes = (int)png_get_rowbytes(png, info);
+    for (int y = 0; y < height; y++) {
         row_pointers[y] = (png_byte *)malloc(rowBytes);
     }
 
@@ -529,10 +529,19 @@ void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource * s
         TextureRecord & tr = textures_[source->textureId];
         d3dContext_->PSSetShaderResources(0, 1, &tr.d3dTextureView);
 
+        int sourceW = source->w;
+        int sourceH = source->h;
+        if(sourceW == 0) {
+            sourceW = tr.width;
+        }
+        if(sourceH == 0) {
+            sourceH = tr.height;
+        }
+
         leftUV   =  source->x / (float)tr.width;
         topUV    =  source->y / (float)tr.height;
-        rightUV  = (source->x + source->w) / (float)tr.width;
-        bottomUV = (source->y + source->h) / (float)tr.height;
+        rightUV  = (source->x + (float)sourceW) / (float)tr.width;
+        bottomUV = (source->y + (float)sourceH) / (float)tr.height;
     } else {
         d3dContext_->PSSetShader(d3dColorPixelShader_, nullptr, 0);
 
