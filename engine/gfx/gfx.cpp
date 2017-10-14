@@ -1,12 +1,13 @@
 #include "gfx/gfx.h"
 
 #include "os/os.h"
-
 #include "gfx/shaders.h"
 
 #include <windows.h>
 #include <d3d11_1.h>
 #include <directxmath.h>
+
+#include "png.h"
 
 #include <vector>
 
@@ -215,6 +216,21 @@ bool startup()
     d3dContext_->OMSetBlendState(blendState, nullptr, 0xffffffff);
     blendState->Release();
 
+    // Setup sampler state
+    ID3D11SamplerState * samplerState = nullptr;
+    D3D11_SAMPLER_DESC sampDesc;
+    ZeroMemory(&sampDesc, sizeof(sampDesc));
+    sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+    d3dDevice_->CreateSamplerState(&sampDesc, &samplerState);
+    assert(samplerState != nullptr);
+    d3dContext_->PSSetSamplers(0, 1, &samplerState);
+    samplerState->Release();
+
     // Create the vertex shader
     hr = d3dDevice_->CreateVertexShader(Shader_VSPos, sizeof(Shader_VSPos), nullptr, &d3dVertexShader_);
     if (FAILED(hr)) {
@@ -352,7 +368,7 @@ int createTexture(int width, int height)
 
     int id = (int)textures_.size();
     textures_.push_back(tr);
-    return 0;
+    return id;
 }
 
 unsigned char * lockTexture(int id, TextureMetrics * outMetrics)
@@ -376,6 +392,106 @@ void unlockTexture(int id)
 
     TextureRecord & tr = textures_[id];
     d3dContext_->Unmap(tr.d3dTexture, 0);
+}
+
+struct gfx_read_png_info
+{
+    unsigned char * curr;
+    png_size_t remaining;
+};
+static void gfx_read_png(png_structp read, png_bytep data, png_size_t length)
+{
+    gfx_read_png_info * info = (gfx_read_png_info *)png_get_io_ptr(read);
+    assert(info->remaining >= length);
+    memcpy(data, info->curr, length);
+    info->curr += length;
+    info->remaining -= length;
+}
+
+int loadPNG(const char * path, TextureMetrics * outMetrics)
+{
+    std::vector<unsigned char> pngFileData;
+    if (!os::readFile(path, pngFileData)) {
+        return -1;
+    }
+
+    png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+    if (png == NULL) {
+        return -1;
+    }
+
+    png_infop info = png_create_info_struct(png);
+    if (info == NULL) {
+        png_destroy_read_struct(&png, NULL, NULL);
+        return -1;
+    }
+
+    if (setjmp(png_jmpbuf(png))) {
+        png_destroy_read_struct(&png, &info, NULL);
+        return -1;
+    }
+
+    gfx_read_png_info readInfo;
+    readInfo.curr = &pngFileData[0];
+    readInfo.remaining = pngFileData.size();
+    png_set_read_fn(png, &readInfo, gfx_read_png);
+    png_read_info(png, info);
+
+    int width      = png_get_image_width(png, info);
+    int height     = png_get_image_height(png, info);
+    int color_type = png_get_color_type(png, info);
+    int bit_depth  = png_get_bit_depth(png, info);
+
+    // Read any color_type into 8bit depth, RGBA format.
+    // See http://www.libpng.org/pub/png/libpng-manual.txt
+
+    if (bit_depth == 16)
+        png_set_strip_16(png);
+
+    if (color_type == PNG_COLOR_TYPE_PALETTE)
+        png_set_palette_to_rgb(png);
+
+    // PNG_COLOR_TYPE_GRAY_ALPHA is always 8 or 16bit depth.
+    if (( color_type == PNG_COLOR_TYPE_GRAY) && ( bit_depth < 8) )
+        png_set_expand_gray_1_2_4_to_8(png);
+
+    if (png_get_valid(png, info, PNG_INFO_tRNS))
+        png_set_tRNS_to_alpha(png);
+
+    // These color_type don't have an alpha channel then fill it with 0xff.
+    if (( color_type == PNG_COLOR_TYPE_RGB) ||
+        ( color_type == PNG_COLOR_TYPE_GRAY) ||
+        ( color_type == PNG_COLOR_TYPE_PALETTE) )
+        png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
+
+    if (( color_type == PNG_COLOR_TYPE_GRAY) ||
+        ( color_type == PNG_COLOR_TYPE_GRAY_ALPHA) )
+        png_set_gray_to_rgb(png);
+
+    png_read_update_info(png, info);
+
+    png_bytep * row_pointers = (png_bytep *)malloc(sizeof(png_bytep) * height);
+    int rowBytes = png_get_rowbytes(png, info);
+    for (unsigned int y = 0; y < height; y++) {
+        row_pointers[y] = (png_byte *)malloc(rowBytes);
+    }
+
+    png_read_image(png, row_pointers);
+
+    int id = gfx::createTexture(width, height);
+    unsigned char * pixels = gfx::lockTexture(id, outMetrics);
+    assert(rowBytes >= outMetrics->pitch);
+    for (int y = 0; y < height; y++) {
+        memcpy(pixels + (y * outMetrics->pitch), row_pointers[y], rowBytes);
+    }
+    gfx::unlockTexture(id);
+
+    png_destroy_read_struct(&png, &info, NULL);
+    for (int y = 0; y < height; y++) {
+        free(row_pointers[y]);
+    }
+    free(row_pointers);
+    return id;
 }
 
 void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource * source, Color * color, float anchorX, float anchorY, float r)

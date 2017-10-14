@@ -39,4 +39,22 @@ void printf(const char * format, ...)
     }
 }
 
+bool readFile(const char *path, std::vector<unsigned char> &bytes)
+{
+    FILE *f = fopen(path, "rb");
+    if(!f) {
+        return false;
+    }
+
+    fseek(f, 0, SEEK_END);
+    size_t fileSize = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    bytes.resize(fileSize);
+    size_t bytesRead = fread(&bytes[0], 1, fileSize, f);
+    bool success = (fileSize == bytesRead);
+    fclose(f);
+    return success;
+}
+
 }

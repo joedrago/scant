@@ -2,6 +2,7 @@
 #define OS_OS_H
 
 #include <windows.h>
+#include <vector>
 
 namespace os
 {
@@ -16,6 +17,8 @@ void setWindowFullscreen(bool fullscreen);
 int windowWidth();
 int windowHeight();
 HWND windowHandle();
+
+bool readFile(const char *path, std::vector<unsigned char> &bytes);
 
 }
 

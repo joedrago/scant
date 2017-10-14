@@ -37,6 +37,7 @@ struct TextureMetrics
 int createTexture(int width, int height); // returns id
 unsigned char * lockTexture(int id, TextureMetrics * outMetrics);
 void unlockTexture(int id);
+int loadPNG(const char *path, TextureMetrics * outMetrics);
 
 void draw(float pixelX, float pixelY, float pixelW, float pixelH,
           DrawSource * source = nullptr,

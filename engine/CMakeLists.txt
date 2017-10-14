@@ -21,6 +21,7 @@ set(ENGINE_SRCS
 add_library(engine
     ${ENGINE_SRCS}
 )
+target_link_libraries(engine zlib libpng)
 
 macro(add_game GAME SRCS)
     message(STATUS "Adding game: ${GAME}")

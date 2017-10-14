@@ -1,15 +1,4 @@
-#add_subdirectory(zlib)
-#
-#set(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/zlib)
-#include_directories(
-#    ${CMAKE_CURRENT_BINARY_DIR}/zlib
-#    ${CMAKE_CURRENT_SOURCE_DIR}/zlib
-#)
-#set(PNG_BUILD_ZLIB TRUE)
-#set(PNG_SHARED FALSE)
-#set(PNG_TESTS FALSE)
-#add_subdirectory(libpng)
-
+set(CMAKE_C_FLAGS /wd4996)
 
 set(ZLIB_SRCS
     zlib/adler32.c
@@ -38,7 +27,7 @@ set(LIBPNG_SRCS
     libpng/pngget.c
     libpng/pngmem.c
     #libpng/pngpread.c
-    #libpng/pngread.c
+    libpng/pngread.c
     libpng/pngrio.c
     libpng/pngrtran.c
     libpng/pngrutil.c
@@ -46,12 +35,10 @@ set(LIBPNG_SRCS
     #libpng/pngtest.c
     libpng/pngtrans.c
     libpng/pngwio.c
-    #libpng/pngwrite.c
+    libpng/pngwrite.c
     libpng/pngwtran.c
     libpng/pngwutil.c
 )
 include_directories(zlib libpng)
 add_library(libpng ${LIBPNG_SRCS})
 set_target_properties(libpng PROPERTIES FOLDER ext)
-
-# foo

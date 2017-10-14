@@ -4,7 +4,10 @@
 namespace game
 {
 
-int textureID_;
+int homemadeID_;
+
+gfx::DrawSource loadedSource_;
+int loadedID_;
 
 void configure()
 {
@@ -14,10 +17,10 @@ void configure()
 
 void startup()
 {
-    textureID_ = gfx::createTexture(256, 256);
+    homemadeID_ = gfx::createTexture(256, 256);
 
     gfx::TextureMetrics metrics;
-    unsigned char * pixels = gfx::lockTexture(textureID_, &metrics);
+    unsigned char * pixels = gfx::lockTexture(homemadeID_, &metrics);
     for (int j = 0; j < 256; ++j) {
         for (int i = 0; i < 256; ++i) {
             unsigned char * pixel = pixels + (i * 4) + (j * metrics.pitch);
@@ -27,7 +30,13 @@ void startup()
             pixel[3] = 255;
         }
     }
-    gfx::unlockTexture(textureID_);
+    gfx::unlockTexture(homemadeID_);
+
+    loadedSource_.textureId = gfx::loadPNG("data/happy.png", &metrics);
+    loadedSource_.x = 0;
+    loadedSource_.y = 0;
+    loadedSource_.w = metrics.width;
+    loadedSource_.h = metrics.height;
 }
 
 void update()
@@ -36,15 +45,17 @@ void update()
     gfx::draw(10, 10, 100, 100, nullptr, &c1);
 
     gfx::Color c2 = { 255, 0, 128, 255 };
-    gfx::draw(300, 300, 50, 200, nullptr, &c2);
+    gfx::draw(10, 300, 50, 200, nullptr, &c2);
 
     gfx::DrawSource src;
-    src.textureId = textureID_;
+    src.textureId = homemadeID_;
     src.x = 0;
     src.y = 0;
     src.w = 256;
     src.h = 256;
     gfx::draw(400, 10, 256, 256, &src);
+
+    gfx::draw(400, 300, loadedSource_.w, loadedSource_.h, &loadedSource_);
 }
 
 void shutdown()

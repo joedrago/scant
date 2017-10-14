@@ -13,13 +13,7 @@ void VSPos(
 }
 
 Texture2D texture0;
-
-SamplerState sampleNearest
-{
-    Filter = POINT;
-    AddressU = Clamp;
-    AddressV = Clamp;
-};
+SamplerState sampler0;
 
 float4 PSTextureColor(
     in float4 iPosition : SV_POSITION,
@@ -27,7 +21,7 @@ float4 PSTextureColor(
     in float4 iColor : COLOR
     ) : SV_Target
 {
-    return texture0.Sample(sampleNearest, iTexcoord) * iColor;
+    return texture0.Sample(sampler0, iTexcoord) * iColor;
 }
 
 float4 PSColor(
