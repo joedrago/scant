@@ -1,5 +1,3 @@
-set(CMAKE_C_FLAGS /wd4996)
-
 set(ZLIB_SRCS
     zlib/adler32.c
     zlib/compress.c
@@ -42,3 +40,5 @@ set(LIBPNG_SRCS
 include_directories(zlib libpng)
 add_library(libpng ${LIBPNG_SRCS})
 set_target_properties(libpng PROPERTIES FOLDER ext)
+
+add_library(stb stb/stb_vorbis.c)

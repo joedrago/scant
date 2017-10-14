@@ -31,6 +31,7 @@ void shutdown()
 void begin()
 {
     input::update();
+    sound::update();
     gfx::begin();
 }
 

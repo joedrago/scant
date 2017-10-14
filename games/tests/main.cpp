@@ -1,6 +1,7 @@
 #include "gfx/gfx.h"
 #include "input/input.h"
 #include "os/os.h"
+#include "sound/sound.h"
 
 namespace game
 {
@@ -11,6 +12,8 @@ gfx::DrawSource loadedSource_;
 int loadedID_;
 float loadedX_ = 400.0f;
 float loadedY_ = 300.0f;
+
+int soundID_;
 
 void configure()
 {
@@ -40,12 +43,26 @@ void startup()
     loadedSource_.y = 0;
     loadedSource_.w = metrics.width;
     loadedSource_.h = metrics.height;
+
+    int bgm = sound::loadOGG("data/loop1.ogg", 1, true);
+    sound::play(bgm);
+
+    soundID_ = sound::loadOGG("data/horn.ogg", 2, false);
 }
 
 void update()
 {
     if(input::released(input::START)) {
         os::quit();
+    }
+
+    if(input::pressed(input::ACCEPT)) {
+        sound::play(soundID_);
+    }
+
+    if(input::pressed(input::CANCEL)) {
+        // sound::stopAll();
+        sound::stop(soundID_);
     }
 
     if(input::held(input::LEFT)) {
