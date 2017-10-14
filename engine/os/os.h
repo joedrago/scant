@@ -2,6 +2,7 @@
 #define OS_OS_H
 
 #include <windows.h>
+#include <string>
 #include <vector>
 
 namespace os
@@ -21,6 +22,7 @@ int windowHeight();
 HWND windowHandle();
 
 bool readFile(const char *path, std::vector<unsigned char> &bytes);
+bool readFile(const char *path, std::string &s);
 
 }
 

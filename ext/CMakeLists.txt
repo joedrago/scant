@@ -42,3 +42,7 @@ add_library(libpng ${LIBPNG_SRCS})
 set_target_properties(libpng PROPERTIES FOLDER ext)
 
 add_library(stb stb/stb_vorbis.c)
+set_target_properties(stb PROPERTIES FOLDER ext)
+
+add_library(cjson cjson/cjson.c cjson/cjson.h)
+set_target_properties(cjson PROPERTIES FOLDER ext)

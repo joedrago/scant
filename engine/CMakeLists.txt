@@ -1,6 +1,8 @@
 set(ENGINE_SRCS
     gfx/gfx.cpp
     gfx/gfx.h
+    gfx/spritesheet.cpp
+    gfx/spritesheet.h
 
     input/input.cpp
     input/input.h
@@ -21,11 +23,12 @@ set(ENGINE_SRCS
 add_library(engine
     ${ENGINE_SRCS}
 )
-target_link_libraries(engine zlib libpng stb)
+target_link_libraries(engine zlib libpng stb cjson)
 
 macro(add_game GAME SRCS)
     message(STATUS "Adding game: ${GAME}")
     add_executable(${GAME} ${SRCS})
     target_link_libraries(${GAME} engine)
     set_target_properties(${GAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+    set_target_properties(${GAME} PROPERTIES FOLDER games)
 endmacro()

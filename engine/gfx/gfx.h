@@ -1,6 +1,8 @@
 #ifndef GFX_GFX_H
 #define GFX_GFX_H
 
+#include <vector>
+
 namespace gfx
 {
 
@@ -26,6 +28,7 @@ struct DrawSource
     int w;
     int h;
 };
+typedef std::vector<gfx::DrawSource> Cycle;
 
 struct TextureMetrics
 {

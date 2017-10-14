@@ -13,6 +13,7 @@ include_directories(
     ext/libpng
     ext/stb
     ext/tinyheaders
+    ext/cjson
     engine
 )
 
