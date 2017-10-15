@@ -16,7 +16,7 @@ Spritesheet::~Spritesheet()
     sprites_.clear();
 }
 
-static int jsonGetInt(cJSON * obj, const char * name)
+int jsonGetInt(cJSON * obj, const char * name)
 {
     if (!cJSON_IsObject(obj))
         return 0;
@@ -28,7 +28,7 @@ static int jsonGetInt(cJSON * obj, const char * name)
     return i->valueint;
 }
 
-static const char * jsonGetString(cJSON * obj, const char * name)
+const char * jsonGetString(cJSON * obj, const char * name)
 {
     if (!cJSON_IsObject(obj))
         return nullptr;

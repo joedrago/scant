@@ -15,6 +15,7 @@ float loadedX_ = 400.0f;
 float loadedY_ = 300.0f;
 
 int soundID_;
+int fontID_;
 
 enum Direction
 {
@@ -75,6 +76,8 @@ void startup()
     sheet.findCycle("player_down_walk", walkCycles_[DIRECTION_DOWN]);
     sheet.findCycle("player_left_walk", walkCycles_[DIRECTION_LEFT]);
     sheet.findCycle("player_right_walk", walkCycles_[DIRECTION_RIGHT]);
+
+    fontID_ = gfx::loadFont("yoster");
 }
 
 void update()
@@ -132,15 +135,22 @@ void update()
     gfx::draw(400, 300, (float)loadedSource_.w, (float)loadedSource_.h, &loadedSource_);
 
     int stepIndex = 0;
-    if((GetTickCount() % 500) > 250) {
+    if ((GetTickCount() % 500) > 250) {
         stepIndex = 1;
     }
 
-    gfx::DrawSource *playerSrc = &idleSources_[facing_];
-    if(walking_) {
+    gfx::DrawSource * playerSrc = &idleSources_[facing_];
+    if (walking_) {
         playerSrc = &walkCycles_[facing_][stepIndex];
     }
     gfx::draw(loadedX_, loadedY_, (float)playerSrc->w, (float)playerSrc->h, playerSrc);
+
+    gfx::Color textColor = { 255, 255, 255, 255 };
+    gfx::drawText((float)os::windowWidth() / 2, (float)os::windowHeight() / 2, "Hello Yaya", fontID_, 100.0f, &textColor);
+
+    gfx::Color red = { 255, 0, 0, 255 };
+    draw((float)os::windowWidth() / 2, (float)os::windowHeight() / 2, 1, 1, nullptr, &red);
+    draw((float)os::windowWidth()-1, (float)os::windowHeight()-1, 1, 1, nullptr, &red);
 }
 
 void shutdown()

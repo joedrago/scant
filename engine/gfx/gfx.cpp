@@ -2,6 +2,7 @@
 
 #include "os/os.h"
 #include "gfx/shaders.h"
+#include "gfx/font.h"
 
 #include <windows.h>
 #include <d3d11_1.h>
@@ -9,10 +10,13 @@
 
 #include "png.h"
 
+#include <algorithm>
 #include <vector>
 
 // So wrong, but oh so right. The naughtiest.
 #pragma comment (lib, "D3D11.lib")
+
+// #define DEBUG_FONT_RENDERING
 
 static D3D_DRIVER_TYPE d3dDriverType_ = D3D_DRIVER_TYPE_NULL;
 static D3D_FEATURE_LEVEL d3dFeatureLevel_ = D3D_FEATURE_LEVEL_11_0;
@@ -37,6 +41,7 @@ struct TextureRecord
     ID3D11ShaderResourceView * d3dTextureView;
 };
 static std::vector<TextureRecord> textures_;
+static std::vector<gfx::Font *> fonts_;
 
 struct PosTexColorVertex
 {
@@ -452,7 +457,7 @@ int loadPNG(const char * path, TextureMetrics * outMetrics)
         png_set_palette_to_rgb(png);
 
     // PNG_COLOR_TYPE_GRAY_ALPHA is always 8 or 16bit depth.
-    if (( color_type == PNG_COLOR_TYPE_GRAY) && ( bit_depth < 8) )
+    if (( color_type == PNG_COLOR_TYPE_GRAY) && ( bit_depth < 8))
         png_set_expand_gray_1_2_4_to_8(png);
 
     if (png_get_valid(png, info, PNG_INFO_tRNS))
@@ -461,11 +466,11 @@ int loadPNG(const char * path, TextureMetrics * outMetrics)
     // These color_type don't have an alpha channel then fill it with 0xff.
     if (( color_type == PNG_COLOR_TYPE_RGB) ||
         ( color_type == PNG_COLOR_TYPE_GRAY) ||
-        ( color_type == PNG_COLOR_TYPE_PALETTE) )
+        ( color_type == PNG_COLOR_TYPE_PALETTE))
         png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
 
     if (( color_type == PNG_COLOR_TYPE_GRAY) ||
-        ( color_type == PNG_COLOR_TYPE_GRAY_ALPHA) )
+        ( color_type == PNG_COLOR_TYPE_GRAY_ALPHA))
         png_set_gray_to_rgb(png);
 
     png_read_update_info(png, info);
@@ -491,6 +496,18 @@ int loadPNG(const char * path, TextureMetrics * outMetrics)
         free(row_pointers[y]);
     }
     free(row_pointers);
+    return id;
+}
+
+int loadFont(const char * name)
+{
+    gfx::Font * font = new gfx::Font;
+    if (!font->load(name)) {
+        delete font;
+        return -1;
+    }
+    int id = (int)fonts_.size();
+    fonts_.push_back(font);
     return id;
 }
 
@@ -531,10 +548,10 @@ void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource * s
 
         int sourceW = source->w;
         int sourceH = source->h;
-        if(sourceW == 0) {
+        if (sourceW == 0) {
             sourceW = tr.width;
         }
-        if(sourceH == 0) {
+        if (sourceH == 0) {
             sourceH = tr.height;
         }
 
@@ -570,6 +587,77 @@ void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource * s
     d3dContext_->Unmap(d3dVertexBuffer_, 0);
 
     d3dContext_->Draw(4, 0);
+}
+
+void drawText(float pixelX, float pixelY, const char * text, int fontId, float fontHeight, Color * color, float anchorX, float anchorY, float r, float * outWidth, float * outHeight)
+{
+    if ((fontId < 0) || (fontId >= fonts_.size())) {
+        return;
+    }
+    Font * font = fonts_[fontId];
+    assert(font);
+
+    float scale = fontHeight / font->maxHeight();
+    float left = os::windowHeight() + 1000.0f;
+    float top = os::windowWidth() + 1000.0f;
+    float right = -1000.0f;
+    float bottom = -1000.0f;
+
+    float x = 0;
+    float y = 0;
+    for (const char * c = text; *c; ++c) {
+        int id = *c;
+        Font::Glyph * glyph = font->findGlyph(id);
+        if (!glyph)
+            continue;
+
+        float glyphX = x + (glyph->xoffset * scale);
+        float glyphY = y + (glyph->yoffset * scale);
+        float glyphW = glyph->src.w * scale;
+        float glyphH = glyph->src.h * scale;
+
+        left = min(left, glyphX);
+        top = min(top, glyphY);
+        right = max(right, glyphX + glyphW);
+        bottom = max(bottom, glyphY + glyphH);
+
+        x += glyph->xadvance * scale;
+    }
+
+    float totalWidth = right - left;
+    float totalHeight = bottom - top;
+    float anchorOffsetX = -1 * anchorX * totalWidth;
+    float anchorOffsetY = -1 * anchorY * totalHeight;
+
+#if defined(DEBUG_FONT_RENDERING)
+    // debug
+    gfx::Color cyan = { 0, 255, 255, 64 };
+    draw(anchorOffsetX + pixelX, anchorOffsetY + pixelY, totalWidth, totalHeight, nullptr, &cyan);
+#endif
+
+    x = pixelX;
+    y = pixelY;
+    for (const char * c = text; *c; ++c) {
+        int id = *c;
+        Font::Glyph * glyph = font->findGlyph(id);
+        if (!glyph)
+            continue;
+
+        if ((glyph->src.w > 0) && (glyph->src.h > 0)) {
+            float glyphX = anchorOffsetX + x + (glyph->xoffset * scale) - left;
+            float glyphY = anchorOffsetY + y + (glyph->yoffset * scale) - top;
+            float glyphW = glyph->src.w * scale;
+            float glyphH = glyph->src.h * scale;
+            draw(glyphX, glyphY, glyphW, glyphH, &glyph->src, color);
+
+#if defined(DEBUG_FONT_RENDERING)
+            // debug
+            gfx::Color orange = { 255, 128, 0, 64 };
+            draw(glyphX, glyphY, glyphW, glyphH, nullptr, &orange);
+#endif
+        }
+        x += glyph->xadvance * scale;
+    }
 }
 
 }

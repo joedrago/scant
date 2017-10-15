@@ -51,7 +51,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     hinstance_ = hInstance;
     RECT rc = { 0, 0, windowWidth_, windowHeight_ };
     if (!windowFullscreen_) {
-        AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+        // AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
     }
 
     hwnd_ = CreateWindow("ScantWindowClass", windowName_.c_str(), windowStyle,

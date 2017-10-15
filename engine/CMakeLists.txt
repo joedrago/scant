@@ -1,4 +1,6 @@
 set(ENGINE_SRCS
+    gfx/font.cpp
+    gfx/font.h
     gfx/gfx.cpp
     gfx/gfx.h
     gfx/spritesheet.cpp
