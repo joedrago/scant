@@ -1,9 +1,11 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef APP_H
+#define APP_H
 
 #include "gfx/gfx.h"
 
 #include <stdint.h>
+
+#include "Game.h"
 
 class App
 {
@@ -39,6 +41,11 @@ public:
     void mainMenuUpdate();
     void mainMenuRender();
 
+    void gameEnter();
+    void gameLeave();
+    void gameUpdate();
+    void gameRender();
+
     typedef void (App::*enterFunction)();
     typedef void (App::*leaveFunction)();
     typedef void (App::*updateFunction)();
@@ -68,6 +75,9 @@ protected:
     int mainMenuFont_;
     gfx::DrawSource mainMenuLogo_;
     int mainMenuIndex_;
+
+    // Game
+    Game *game_;
 };
 
 #endif

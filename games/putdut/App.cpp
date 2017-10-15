@@ -24,11 +24,19 @@ App::App()
     viewStates_[VIEW_MAINMENU].update = &App::mainMenuUpdate;
     viewStates_[VIEW_MAINMENU].render = &App::mainMenuRender;
 
-    switchView(VIEW_SPLASH);
+    viewStates_[VIEW_GAME].enter = &App::gameEnter;
+    viewStates_[VIEW_GAME].leave = &App::gameLeave;
+    viewStates_[VIEW_GAME].update = &App::gameUpdate;
+    viewStates_[VIEW_GAME].render = &App::gameRender;
+
+    game_ = new Game();
+
+    switchView(VIEW_GAME);
 }
 
 App::~App()
 {
+    delete game_;
 }
 
 void App::update()
@@ -161,6 +169,9 @@ void App::mainMenuUpdate()
     if(input::released(input::ACCEPT)) {
         sound::play(mainMenuSfxHigh_);
         switch(mainMenuIndex_) {
+            case 0: // Continue
+                switchView(VIEW_GAME);
+                break;
             case 2: // Quit
                 os::quit();
                 break;
@@ -187,4 +198,27 @@ void App::mainMenuRender()
     gfx::drawText((float)os::windowWidth() / 2, y, "New Game", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 1) ? &selectedColor : &unselectedColor);
     y += menuFontSize * 2.0f;
     gfx::drawText((float)os::windowWidth() / 2, y, "Quit", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 2) ? &selectedColor : &unselectedColor);
+}
+
+// --------------------------------------------------------------------------------------
+// Game
+
+void App::gameEnter()
+{
+    game_->enter();
+}
+
+void App::gameLeave()
+{
+    game_->leave();
+}
+
+void App::gameUpdate()
+{
+    game_->update();
+}
+
+void App::gameRender()
+{
+    game_->render();
 }
