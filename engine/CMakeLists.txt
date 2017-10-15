@@ -27,9 +27,9 @@ add_library(engine
 )
 target_link_libraries(engine zlib libpng stb cjson)
 
-macro(add_game GAME SRCS)
+macro(add_game GAME)
     message(STATUS "Adding game: ${GAME}")
-    add_executable(${GAME} ${SRCS})
+    add_executable(${GAME} ${ARGN})
     target_link_libraries(${GAME} engine)
     set_target_properties(${GAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
     set_target_properties(${GAME} PROPERTIES FOLDER games)

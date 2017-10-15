@@ -485,7 +485,7 @@ int loadPNG(const char * path, TextureMetrics * outMetrics)
 
     int id = gfx::createTexture(width, height);
     unsigned char * pixels = gfx::lockTexture(id, outMetrics);
-    assert(rowBytes >= outMetrics->pitch);
+    assert(rowBytes <= outMetrics->pitch);
     for (int y = 0; y < height; y++) {
         memcpy(pixels + (y * outMetrics->pitch), row_pointers[y], rowBytes);
     }
@@ -497,6 +497,18 @@ int loadPNG(const char * path, TextureMetrics * outMetrics)
     }
     free(row_pointers);
     return id;
+}
+
+DrawSource loadPNG(const char * path)
+{
+    TextureMetrics metrics;
+    DrawSource src;
+    src.textureId = loadPNG(path, &metrics);
+    src.x = 0;
+    src.y = 0;
+    src.w = metrics.width;
+    src.h = metrics.height;
+    return src;
 }
 
 int loadFont(const char * name)
@@ -516,12 +528,15 @@ void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource * s
     float windowW = (float)os::windowWidth();
     float windowH = (float)os::windowHeight();
 
-    float leftPos   = (2.0f * ( pixelX / windowW)) - 1.0f;
-    float topPos    = (2.0f * (1.0f - ( pixelY / windowH))) - 1.0f;
-    float rightPos  = (2.0f * ((pixelX + pixelW) / windowW)) - 1.0f;
-    float bottomPos = (2.0f * (1.0f - ((pixelY + pixelH)) / windowH)) - 1.0f;
+    float anchorPixelX = -1 * anchorX * pixelW;
+    float anchorPixelY = -1 * anchorY * pixelH;
 
-    // TODO: account for anchor and rotation
+    float leftPos   = (2.0f * (        (anchorPixelX + pixelX)           / windowW))  - 1.0f;
+    float topPos    = (2.0f * (1.0f - ((anchorPixelY + pixelY)           / windowH))) - 1.0f;
+    float rightPos  = (2.0f * (        (anchorPixelX + pixelX + pixelW)  / windowW))  - 1.0f;
+    float bottomPos = (2.0f * (1.0f - ((anchorPixelY + pixelY + pixelH)) / windowH))  - 1.0f;
+
+    // TODO: rotation
 
     float red, green, blue, alpha;
     if (color) {
@@ -589,13 +604,15 @@ void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource * s
     d3dContext_->Draw(4, 0);
 }
 
-void drawText(float pixelX, float pixelY, const char * text, int fontId, float fontHeight, Color * color, float anchorX, float anchorY, float r, float * outWidth, float * outHeight)
+void drawText(float pixelX, float pixelY, const char * text, int fontId, float fontHeight, Color * color, float anchorX, float anchorY, float r)
 {
     if ((fontId < 0) || (fontId >= fonts_.size())) {
         return;
     }
     Font * font = fonts_[fontId];
     assert(font);
+
+    // TODO: rotation
 
     float scale = fontHeight / font->maxHeight();
     float left = os::windowHeight() + 1000.0f;

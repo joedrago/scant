@@ -42,7 +42,6 @@ void update()
 {
 #if !defined(USE_MIX_THREAD)
     tsMix(context_);
-    tsMix(context_);
 #endif
 
     for (std::vector<SoundRecord>::iterator soundIt = sounds_.begin(); soundIt != sounds_.end(); ++soundIt) {

@@ -39,10 +39,20 @@ void printf(const char * format, ...)
     }
 }
 
-bool readFile(const char *path, std::vector<unsigned char> &bytes)
+uint64_t mono()
 {
-    FILE *f = fopen(path, "rb");
-    if(!f) {
+    LARGE_INTEGER largeInteger, freq;
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&largeInteger);
+    largeInteger.QuadPart *= 1000000;
+    largeInteger.QuadPart /= freq.QuadPart;
+    return (uint64_t)largeInteger.QuadPart;
+}
+
+bool readFile(const char * path, std::vector<unsigned char> & bytes)
+{
+    FILE * f = fopen(path, "rb");
+    if (!f) {
         return false;
     }
 
@@ -57,10 +67,10 @@ bool readFile(const char *path, std::vector<unsigned char> &bytes)
     return success;
 }
 
-bool readFile(const char *path, std::string &s)
+bool readFile(const char * path, std::string & s)
 {
-    FILE *f = fopen(path, "rb");
-    if(!f) {
+    FILE * f = fopen(path, "rb");
+    if (!f) {
         return false;
     }
 

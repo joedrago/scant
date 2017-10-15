@@ -41,6 +41,7 @@ int createTexture(int width, int height); // returns id
 unsigned char * lockTexture(int id, TextureMetrics * outMetrics);
 void unlockTexture(int id);
 int loadPNG(const char * path, TextureMetrics * outMetrics);
+DrawSource loadPNG(const char * path);
 
 void draw(float pixelX, float pixelY, float pixelW, float pixelH,
           DrawSource * source = nullptr,
@@ -50,8 +51,7 @@ void draw(float pixelX, float pixelY, float pixelW, float pixelH,
 int loadFont(const char * name);
 void drawText(float pixelX, float pixelY, const char * text, int fontId, float fontHeight,
               Color * color = nullptr,
-              float anchorX = 0.5f, float anchorY = 0.5f, float r = 0.0f,
-              float * outWidth = nullptr, float * outHeight = nullptr);
+              float anchorX = 0.5f, float anchorY = 0.5f, float r = 0.0f);
 
 }
 
