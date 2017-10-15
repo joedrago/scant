@@ -1,7 +1,7 @@
 set(PUTDUT_SRCS
     main.cpp
-    Game.cpp
-    Game.h
+    App.cpp
+    App.h
 )
 
 add_game(putdut

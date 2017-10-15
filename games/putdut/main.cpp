@@ -1,12 +1,12 @@
 #include "gfx/gfx.h"
 #include "os/os.h"
 
-#include "Game.h"
+#include "App.h"
 
 namespace game
 {
 
-static Game * game_;
+static App * app_;
 
 void configure()
 {
@@ -16,19 +16,19 @@ void configure()
 
 void startup()
 {
-    game_ = new Game();
+    app_ = new App();
 }
 
 void update()
 {
-    game_->update();
-    game_->render();
+    app_->update();
+    app_->render();
 }
 
 void shutdown()
 {
-    delete game_;
-    game_ = nullptr;
+    delete app_;
+    app_ = nullptr;
 }
 
 }

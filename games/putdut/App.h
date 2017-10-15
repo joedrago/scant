@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 
-class Game
+class App
 {
 public:
     enum View
@@ -19,8 +19,8 @@ public:
         VIEW_COUNT
     };
 
-    Game();
-    ~Game();
+    App();
+    ~App();
 
     void update();
     void render();
@@ -39,10 +39,10 @@ public:
     void mainMenuUpdate();
     void mainMenuRender();
 
-    typedef void (Game::*enterFunction)();
-    typedef void (Game::*leaveFunction)();
-    typedef void (Game::*updateFunction)();
-    typedef void (Game::*renderFunction)();
+    typedef void (App::*enterFunction)();
+    typedef void (App::*leaveFunction)();
+    typedef void (App::*updateFunction)();
+    typedef void (App::*renderFunction)();
 
     struct ViewState
     {
@@ -63,6 +63,8 @@ protected:
 
     // MainMenu
     int mainMenuBGM_;
+    int mainMenuSfxLow_;
+    int mainMenuSfxHigh_;
     int mainMenuFont_;
     gfx::DrawSource mainMenuLogo_;
     int mainMenuIndex_;
