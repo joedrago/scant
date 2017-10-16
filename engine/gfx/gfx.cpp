@@ -525,8 +525,8 @@ int loadFont(const char * name)
 
 void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource * source, Color * color, float anchorX, float anchorY, float r)
 {
-    float windowW = (float)os::windowWidth();
-    float windowH = (float)os::windowHeight();
+    float windowW = os::winWf();
+    float windowH = os::winHf();
 
     float anchorPixelX = -1 * anchorX * pixelW;
     float anchorPixelY = -1 * anchorY * pixelH;

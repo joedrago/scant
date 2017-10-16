@@ -22,15 +22,18 @@ int windowWidth();
 int windowHeight();
 HWND windowHandle();
 
-bool readFile(const char *path, std::vector<unsigned char> &bytes);
-bool readFile(const char *path, std::string &s);
+inline float winWf() { return (float)windowWidth(); }
+inline float winHf() { return (float)windowHeight(); }
+
+bool readFile(const char * path, std::vector<unsigned char> & bytes);
+bool readFile(const char * path, std::string & s);
 
 template<class T>
-constexpr const T& clamp( const T& v, const T& lo, const T& hi )
+constexpr const T & clamp(const T & v, const T & lo, const T & hi)
 {
     return min(max(v, lo), hi);
 }
 
 }
 
-#endif
+#endif // ifndef OS_OS_H

@@ -6,6 +6,9 @@ set(PUTDUT_SRCS
 
     Game.cpp
     Game.h
+
+    Level.cpp
+    Level.h
 )
 
 add_game(putdut

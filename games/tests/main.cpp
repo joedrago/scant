@@ -146,11 +146,11 @@ void update()
     gfx::draw(loadedX_, loadedY_, (float)playerSrc->w, (float)playerSrc->h, playerSrc);
 
     gfx::Color textColor = { 255, 255, 255, 255 };
-    gfx::drawText((float)os::windowWidth() / 2, (float)os::windowHeight() / 2, "Hello Yaya", fontID_, 100.0f, &textColor);
+    gfx::drawText(os::winWf() / 2, os::winHf() / 2, "Hello Yaya", fontID_, 100.0f, &textColor);
 
     gfx::Color red = { 255, 0, 0, 255 };
-    draw((float)os::windowWidth() / 2, (float)os::windowHeight() / 2, 1, 1, nullptr, &red);
-    draw((float)os::windowWidth()-1, (float)os::windowHeight()-1, 1, 1, nullptr, &red);
+    draw(os::winWf() / 2, os::winHf() / 2, 1, 1, nullptr, &red);
+    draw(os::winWf()-1, os::winHf()-1, 1, 1, nullptr, &red);
 }
 
 void shutdown()

@@ -29,9 +29,13 @@ App::App()
     viewStates_[VIEW_GAME].update = &App::gameUpdate;
     viewStates_[VIEW_GAME].render = &App::gameRender;
 
-    game_ = new Game();
+    game_ = new Game(this);
 
+#if _DEBUG
     switchView(VIEW_GAME);
+#else
+    switchView(VIEW_SPLASH);
+#endif
 }
 
 App::~App()
@@ -135,7 +139,7 @@ void App::splashRender()
         }
     }
     gfx::Color textColor = { 255, 255, 255, (unsigned char)(opacity * 255.0f) };
-    gfx::drawText((float)os::windowWidth() / 2, (float)os::windowHeight() / 2, "Putdut Games presents...", mainMenuFont_, fontSize, &textColor);
+    gfx::drawText(os::winWf() / 2, os::winHf() / 2, "Drago Family Games presents...", mainMenuFont_, fontSize, &textColor);
 }
 
 // --------------------------------------------------------------------------------------
@@ -193,11 +197,11 @@ void App::mainMenuRender()
         selectedColor = { 234, 77, 60, 255 };
     }
     float y = os::windowHeight() / 2.0f;
-    gfx::drawText((float)os::windowWidth() / 2, y, "Continue", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 0) ? &selectedColor : &unselectedColor);
+    gfx::drawText(os::winWf() / 2, y, "Continue", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 0) ? &selectedColor : &unselectedColor);
     y += menuFontSize * 2.0f;
-    gfx::drawText((float)os::windowWidth() / 2, y, "New Game", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 1) ? &selectedColor : &unselectedColor);
+    gfx::drawText(os::winWf() / 2, y, "New Game", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 1) ? &selectedColor : &unselectedColor);
     y += menuFontSize * 2.0f;
-    gfx::drawText((float)os::windowWidth() / 2, y, "Quit", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 2) ? &selectedColor : &unselectedColor);
+    gfx::drawText(os::winWf() / 2, y, "Quit", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 2) ? &selectedColor : &unselectedColor);
 }
 
 // --------------------------------------------------------------------------------------

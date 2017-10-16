@@ -77,6 +77,7 @@ bool Spritesheet::load(const std::string & basename)
         }
     }
 
+    cJSON_Delete(json);
     return true;
 }
 

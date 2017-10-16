@@ -11,7 +11,11 @@ static App * app_;
 void configure()
 {
     os::setWindowName("PutDut");
+#if defined(_DEBUG)
     os::setWindowFullscreen(false);
+#else
+    os::setWindowFullscreen(true);
+#endif
 }
 
 void startup()

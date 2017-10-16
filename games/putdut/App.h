@@ -46,10 +46,10 @@ public:
     void gameUpdate();
     void gameRender();
 
-    typedef void (App::*enterFunction)();
-    typedef void (App::*leaveFunction)();
-    typedef void (App::*updateFunction)();
-    typedef void (App::*renderFunction)();
+    typedef void (App::* enterFunction)();
+    typedef void (App::* leaveFunction)();
+    typedef void (App::* updateFunction)();
+    typedef void (App::* renderFunction)();
 
     struct ViewState
     {
@@ -58,6 +58,8 @@ public:
         updateFunction update;
         renderFunction render;
     };
+
+    gfx::DrawSource & logo() { return mainMenuLogo_; }
 
 protected:
     View currentView_;
@@ -77,7 +79,7 @@ protected:
     int mainMenuIndex_;
 
     // Game
-    Game *game_;
+    Game * game_;
 };
 
-#endif
+#endif // ifndef APP_H

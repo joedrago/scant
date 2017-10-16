@@ -67,6 +67,7 @@ bool Font::load(const char * basename)
             }
         }
     }
+    cJSON_Delete(json);
     return true;
 }
 

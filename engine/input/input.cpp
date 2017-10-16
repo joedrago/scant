@@ -84,7 +84,7 @@ void update()
     if (GetAsyncKeyState(VK_RIGHT)) {
         currButtons_ |= input::RIGHT;
     }
-    if (GetAsyncKeyState(VK_RETURN)) {
+    if (GetAsyncKeyState(VK_RETURN) || GetAsyncKeyState(VK_SPACE)) {
         currButtons_ |= input::ACCEPT;
     }
     if (GetAsyncKeyState(VK_BACK)) {

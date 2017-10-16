@@ -9,6 +9,7 @@
     "pngjs": "*"
   },
   "scripts": {
-    "packtests": "coffee spritesheet.coffee ../../games/tests"
+    "packtests": "coffee spritesheet.coffee ../../games/tests",
+    "packputdut": "coffee spritesheet.coffee ../../games/putdut"
   }
 }
