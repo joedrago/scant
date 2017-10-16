@@ -158,6 +158,7 @@ void App::splashRender()
 void App::mainMenuEnter()
 {
     mainMenuIndex_ = 0;
+    gotoIndex_ = game_->highestLevelReached();
 
     sound::play(mainMenuBGM_);
 }
