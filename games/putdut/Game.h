@@ -30,6 +30,7 @@ public:
     // How many ms to traverse one cell
     static const int WALK_SLOW = 200;
     static const int WALK_FAST = 50;
+    static const int WALK_REWIND = 50;
 
     Game(App *app);
     ~Game();
@@ -107,6 +108,7 @@ public:
 
     bool calcMovePos(Direction dir, int x, int y, int &ox, int &oy);
     void move(Direction dir);
+    void rewind();
 
     void calcLerpDraw(float p, int srcX, int srcY, int dstX, int dstY, float &drawX, float &drawY);
 
@@ -164,6 +166,7 @@ protected:
     float playerDrawY_;
     bool moving_;
     MoveAction moveAction_;
+    std::vector<MoveAction> undo_;
     int playerDrawIndex_;
     Direction playerFacing_;
     // TODO: add box positions array

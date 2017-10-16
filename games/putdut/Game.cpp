@@ -214,6 +214,7 @@ void Game::resetLevel()
     playerFacing_ = DIRECTION_DOWN;
     playerDrawX_ = gameOffsetX_ + (playerX_ * cellSize_);
     playerDrawY_ = gameOffsetY_ + (playerY_ * cellSize_);
+    undo_.clear();
 }
 
 void Game::enableGameBGM(bool playing)
@@ -304,9 +305,31 @@ void Game::move(Game::Direction dir)
     moveAction_.playerTravelX_ = dstX;
     moveAction_.playerTravelY_ = dstY;
     moveAction_.playerFacing_ = playerFacing_;
+    undo_.push_back(moveAction_);
     switchState(STATE_MOVE);
 
     sound::play(soundStep_);
+}
+
+void Game::rewind()
+{
+    if (!undo_.empty()) {
+        MoveAction undoAction = undo_.back();
+        undo_.pop_back();
+
+        moveAction_.playerX_ = undoAction.playerTravelX_;
+        moveAction_.playerY_ = undoAction.playerTravelY_;
+        moveAction_.playerTravelX_ = undoAction.playerX_;
+        moveAction_.playerTravelY_ = undoAction.playerY_;
+        moveAction_.boxX_ = undoAction.boxTravelX_;
+        moveAction_.boxY_ = undoAction.boxTravelY_;
+        moveAction_.boxTravelX_ = undoAction.boxX_;
+        moveAction_.boxTravelY_ = undoAction.boxY_;
+        playerFacing_ = undoAction.playerFacing_;
+        walkSpeed_ = WALK_REWIND;
+        moving_ = true;
+        switchState(STATE_MOVE);
+    }
 }
 
 // --------------------------------------------------------------------------------------
@@ -454,9 +477,9 @@ void Game::idleUpdate()
         return;
     }
 
-    if (input::pressed(input::CANCEL)) {
-        sound::play(soundReset_);
-        resetLevel();
+    if (input::held(input::CANCEL)) {
+        // sound::play(soundReset_);
+        rewind();
         return;
     }
 
