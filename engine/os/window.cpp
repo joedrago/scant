@@ -34,7 +34,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     wcex.cbWndExtra = 0;
     wcex.hInstance = hInstance;
     wcex.hIcon = nullptr; //LoadIcon( hInstance, ( LPCTSTR )IDI_TUTORIAL1 );
-    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hCursor = nullptr; //LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)( COLOR_WINDOW + 1 );
     wcex.lpszMenuName = nullptr;
     wcex.lpszClassName = "ScantWindowClass";
@@ -91,6 +91,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message) {
         case WM_SETFOCUS:
             hasFocus_ = true;
+            ShowCursor(FALSE);
             break;
 
         case WM_KILLFOCUS:
