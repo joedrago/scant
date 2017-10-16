@@ -21,6 +21,7 @@ void setWindowFullscreen(bool fullscreen);
 int windowWidth();
 int windowHeight();
 HWND windowHandle();
+bool windowHasFocus();
 
 inline float winWf() { return (float)windowWidth(); }
 inline float winHf() { return (float)windowHeight(); }

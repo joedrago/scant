@@ -1,5 +1,7 @@
 #include "input/input.h"
 
+#include "os/os.h"
+
 #include <windows.h>
 #include <XInput.h>
 
@@ -72,26 +74,28 @@ void update()
         }
     }
 
-    if (GetAsyncKeyState(VK_UP)) {
-        currButtons_ |= input::UP;
-    }
-    if (GetAsyncKeyState(VK_DOWN)) {
-        currButtons_ |= input::DOWN;
-    }
-    if (GetAsyncKeyState(VK_LEFT)) {
-        currButtons_ |= input::LEFT;
-    }
-    if (GetAsyncKeyState(VK_RIGHT)) {
-        currButtons_ |= input::RIGHT;
-    }
-    if (GetAsyncKeyState(VK_RETURN) || GetAsyncKeyState(VK_SPACE)) {
-        currButtons_ |= input::ACCEPT;
-    }
-    if (GetAsyncKeyState(VK_BACK)) {
-        currButtons_ |= input::CANCEL;
-    }
-    if (GetAsyncKeyState(VK_ESCAPE)) {
-        currButtons_ |= input::START;
+    if (os::windowHasFocus()) {
+        if (GetAsyncKeyState(VK_UP)) {
+            currButtons_ |= input::UP;
+        }
+        if (GetAsyncKeyState(VK_DOWN)) {
+            currButtons_ |= input::DOWN;
+        }
+        if (GetAsyncKeyState(VK_LEFT)) {
+            currButtons_ |= input::LEFT;
+        }
+        if (GetAsyncKeyState(VK_RIGHT)) {
+            currButtons_ |= input::RIGHT;
+        }
+        if (GetAsyncKeyState(VK_RETURN) || GetAsyncKeyState(VK_SPACE)) {
+            currButtons_ |= input::ACCEPT;
+        }
+        if (GetAsyncKeyState(VK_BACK)) {
+            currButtons_ |= input::CANCEL;
+        }
+        if (GetAsyncKeyState(VK_ESCAPE)) {
+            currButtons_ |= input::START;
+        }
     }
 }
 
@@ -107,7 +111,7 @@ bool released(int button)
 
 bool held(int button)
 {
-    return ((currButtons_ & button) != 0);
+    return (currButtons_ & button) != 0;
 }
 
 }

@@ -534,7 +534,7 @@ void Game::idleUpdate()
     enableBGM(true);
 
     if (currentLevel_.win()
-        || input::pressed(input::CANCEL)
+        // || input::pressed(input::CANCEL)
         )
     {
         switchState(STATE_FANFARE);
@@ -676,7 +676,7 @@ void Game::renderLevel()
         }
     }
 
-    if (moving_) {
+    if (moving_ && (moveAction_.boxX_ != -1) && (moveAction_.boxY_ != -1) && (moveAction_.boxTravelX_ != -1) && (moveAction_.boxTravelY_ != -1)) {
         float p = os::clamp((float)stateElapsedMS() / (float)walkSpeed_, 0.0f, 1.0f);
         float x, y;
         calcLerpDraw(p, moveAction_.boxX_, moveAction_.boxY_, moveAction_.boxTravelX_, moveAction_.boxTravelY_, x, y);

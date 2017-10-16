@@ -10,6 +10,7 @@ static HINSTANCE hinstance_ = nullptr;
 static HWND hwnd_ = nullptr;
 static int windowWidth_ = 1024;
 static int windowHeight_ = 768;
+static bool hasFocus_ = false;
 
 static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -88,6 +89,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     HDC hdc;
 
     switch (message) {
+        case WM_SETFOCUS:
+            hasFocus_ = true;
+            break;
+
+        case WM_KILLFOCUS:
+            hasFocus_ = false;
+            break;
+
         case WM_PAINT:
             hdc = BeginPaint(hWnd, &ps);
             EndPaint(hWnd, &ps);
@@ -130,6 +139,11 @@ int windowHeight()
 HWND windowHandle()
 {
     return hwnd_;
+}
+
+bool windowHasFocus()
+{
+    return hasFocus_;
 }
 
 void quit()
