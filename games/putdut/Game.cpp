@@ -209,10 +209,6 @@ void Game::resetLevel()
 {
     currentLevel_.copy(*levels_[currentLevelIndex_]);
 
-    boxX_ = -1;
-    boxY_ = -1;
-    boxTravelX_ = -1;
-    boxTravelY_ = -1;
     playerX_ = currentLevel_.startX_;
     playerY_ = currentLevel_.startY_;
     playerFacing_ = DIRECTION_DOWN;
@@ -291,19 +287,23 @@ void Game::move(Game::Direction dir)
             return;
     }
 
+    moving_ = true;
     if (boxDstX == -1) {
-        boxX_ = -1;
-        boxY_ = -1;
-        boxTravelX_ = -1;
-        boxTravelY_ = -1;
+        moveAction_.boxX_ = -1;
+        moveAction_.boxY_ = -1;
+        moveAction_.boxTravelX_ = -1;
+        moveAction_.boxTravelY_ = -1;
     } else {
-        boxX_ = dstX;
-        boxY_ = dstY;
-        boxTravelX_ = boxDstX;
-        boxTravelY_ = boxDstY;
+        moveAction_.boxX_ = dstX;
+        moveAction_.boxY_ = dstY;
+        moveAction_.boxTravelX_ = boxDstX;
+        moveAction_.boxTravelY_ = boxDstY;
     }
-    travelX_ = dstX;
-    travelY_ = dstY;
+    moveAction_.playerX_ = playerX_;
+    moveAction_.playerY_ = playerY_;
+    moveAction_.playerTravelX_ = dstX;
+    moveAction_.playerTravelY_ = dstY;
+    moveAction_.playerFacing_ = playerFacing_;
     switchState(STATE_MOVE);
 
     sound::play(soundStep_);
@@ -440,10 +440,7 @@ void Game::idleLeave()
 
 void Game::idleUpdate()
 {
-    boxX_ = -1;
-    boxY_ = -1;
-    boxTravelX_ = -1;
-    boxTravelY_ = -1;
+    moving_ = false;
     playerDrawX_ = gameOffsetX_ + (playerX_ * cellSize_);
     playerDrawY_ = gameOffsetY_ + (playerY_ * cellSize_);
 
@@ -502,17 +499,14 @@ void Game::moveEnter()
 
 void Game::moveLeave()
 {
-    if ((boxX_ != -1) && (boxY_ != -1) && (boxTravelX_ != -1) && (boxTravelY_ != -1)) {
-        currentLevel_.cells_[boxX_][boxY_].box_ = false;
-        currentLevel_.cells_[boxTravelX_][boxTravelY_].box_ = true;
+    if ((moveAction_.boxX_ != -1) && (moveAction_.boxY_ != -1) && (moveAction_.boxTravelX_ != -1) && (moveAction_.boxTravelY_ != -1)) {
+        currentLevel_.cells_[moveAction_.boxX_][moveAction_.boxY_].box_ = false;
+        currentLevel_.cells_[moveAction_.boxTravelX_][moveAction_.boxTravelY_].box_ = true;
     }
-    boxX_ = -1;
-    boxY_ = -1;
-    boxTravelX_ = -1;
-    boxTravelY_ = -1;
-    playerX_ = travelX_;
-    playerY_ = travelY_;
+    playerX_ = moveAction_.playerTravelX_;
+    playerY_ = moveAction_.playerTravelY_;
     playerDrawIndex_ = 0;
+    moving_ = false;
 }
 
 void Game::moveUpdate()
@@ -523,7 +517,7 @@ void Game::moveUpdate()
     }
 
     float p = os::clamp((float)stateElapsedMS() / (float)walkSpeed_, 0.0f, 1.0f);
-    calcLerpDraw(p, playerX_, playerY_, travelX_, travelY_, playerDrawX_, playerDrawY_);
+    calcLerpDraw(p, playerX_, playerY_, moveAction_.playerTravelX_, moveAction_.playerTravelY_, playerDrawX_, playerDrawY_);
     if (stateElapsedMS() > walkSpeed_) {
         switchState(STATE_IDLE);
     }
@@ -580,7 +574,9 @@ void Game::renderLevel()
                 gfx::draw(x, y, cellSize_, cellSize_, &artFloors_[0]);
             }
             if (cell.box_) {
-                if (((i != boxX_) || (j != boxY_)) && ((i != boxTravelX_) || (j != boxTravelY_))) {
+                if (!moving_
+                    || (((i != moveAction_.boxX_) || (j != moveAction_.boxY_)) && ((i != moveAction_.boxTravelX_) || (j != moveAction_.boxTravelY_))))
+                {
                     gfx::draw(x, y, cellSize_, cellSize_, &artBoxes_[0]);
                 }
             }
@@ -594,10 +590,10 @@ void Game::renderLevel()
         }
     }
 
-    if ((boxX_ != -1) && (boxY_ != -1) && (boxTravelX_ != -1) && (boxTravelY_ != -1)) {
+    if (moving_) {
         float p = os::clamp((float)stateElapsedMS() / (float)walkSpeed_, 0.0f, 1.0f);
         float x, y;
-        calcLerpDraw(p, boxX_, boxY_, boxTravelX_, boxTravelY_, x, y);
+        calcLerpDraw(p, moveAction_.boxX_, moveAction_.boxY_, moveAction_.boxTravelX_, moveAction_.boxTravelY_, x, y);
         gfx::draw(x, y, cellSize_, cellSize_, &artBoxes_[0]);
     }
 

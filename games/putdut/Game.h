@@ -110,6 +110,19 @@ public:
 
     void calcLerpDraw(float p, int srcX, int srcY, int dstX, int dstY, float &drawX, float &drawY);
 
+    struct MoveAction
+    {
+        int playerX_;
+        int playerY_;
+        int playerTravelX_;
+        int playerTravelY_;
+        int boxX_;
+        int boxY_;
+        int boxTravelX_;
+        int boxTravelY_;
+        Direction playerFacing_;
+    };
+
 protected:
     bool switchedLevelOnce_;
     App *app_;
@@ -147,16 +160,10 @@ protected:
     int currentLevelIndex_;
     int playerX_;
     int playerY_;
-    int travelX_;
-    int travelY_;
     float playerDrawX_;
     float playerDrawY_;
-    int boxX_;
-    int boxY_;
-    int boxTravelX_;
-    int boxTravelY_;
-    float boxDrawX_;
-    float boxDrawY_;
+    bool moving_;
+    MoveAction moveAction_;
     int playerDrawIndex_;
     Direction playerFacing_;
     // TODO: add box positions array
