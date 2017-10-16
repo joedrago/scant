@@ -17,6 +17,7 @@ public:
         VIEW_SPLASH,
         VIEW_MAINMENU,
         VIEW_GAME,
+        VIEW_FINALE,
 
         VIEW_COUNT
     };
@@ -45,6 +46,11 @@ public:
     void gameLeave();
     void gameUpdate();
     void gameRender();
+
+    void finaleEnter();
+    void finaleLeave();
+    void finaleUpdate();
+    void finaleRender();
 
     typedef void (App::* enterFunction)();
     typedef void (App::* leaveFunction)();
@@ -77,9 +83,13 @@ protected:
     int mainMenuFont_;
     gfx::DrawSource mainMenuLogo_;
     int mainMenuIndex_;
+    int gotoIndex_;
 
     // Game
     Game * game_;
+
+    // Finale
+    int finaleBGM_;
 };
 
 #endif // ifndef APP_H

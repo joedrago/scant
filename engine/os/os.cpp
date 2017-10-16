@@ -85,4 +85,17 @@ bool readFile(const char * path, std::string & s)
     return success;
 }
 
+bool writeFile(const char * path, const std::string & s)
+{
+    FILE * f = fopen(path, "wb");
+    if (!f) {
+        return false;
+    }
+
+    size_t bytesWritten = fwrite(&s[0], 1, s.size(), f);
+    bool success = (s.size() == bytesWritten);
+    fclose(f);
+    return success;
+}
+
 }

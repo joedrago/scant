@@ -29,10 +29,16 @@ App::App()
     viewStates_[VIEW_GAME].update = &App::gameUpdate;
     viewStates_[VIEW_GAME].render = &App::gameRender;
 
+    viewStates_[VIEW_FINALE].enter = &App::finaleEnter;
+    viewStates_[VIEW_FINALE].leave = &App::finaleLeave;
+    viewStates_[VIEW_FINALE].update = &App::finaleUpdate;
+    viewStates_[VIEW_FINALE].render = &App::finaleRender;
+
     game_ = new Game(this);
+    gotoIndex_ = game_->highestLevelReached();
 
 #if _DEBUG
-    switchView(VIEW_GAME);
+    switchView(VIEW_MAINMENU);
 #else
     switchView(VIEW_SPLASH);
 #endif
@@ -45,17 +51,16 @@ App::~App()
 
 void App::update()
 {
-    switchedView_ = false;
-    if (viewStates_[currentView_].update) {
-        ((*this).*viewStates_[currentView_].update)();
-    }
+    do {
+        switchedView_ = false;
+        if (viewStates_[currentView_].update) {
+            ((*this).*viewStates_[currentView_].update)();
+        }
+    } while (switchedView_);
 }
 
 void App::render()
 {
-    if (switchedView_)
-        return;
-
     if (viewStates_[currentView_].render) {
         ((*this).*viewStates_[currentView_].render)();
     }
@@ -63,6 +68,8 @@ void App::render()
 
 void App::switchView(App::View view)
 {
+    input::update(); // Hack to stop pressed() from spilling into the next view
+
     if (viewStates_[currentView_].leave) {
         ((*this).*viewStates_[currentView_].leave)();
     }
@@ -91,6 +98,9 @@ void App::loadResources()
     mainMenuSfxHigh_ = sound::loadOGG("data/menu_high.ogg", 1, false);
     mainMenuFont_ = gfx::loadFont("yoster");
     mainMenuLogo_ = gfx::loadPNG("data/logo.png");
+
+    // VIEW_FINALE
+    finaleBGM_ = sound::loadOGG("data/finale.ogg", 1, true);
 }
 
 // --------------------------------------------------------------------------------------
@@ -159,21 +169,42 @@ void App::mainMenuLeave()
 
 void App::mainMenuUpdate()
 {
-    if(input::pressed(input::UP)) {
+    if (viewElapsedMS() < 250)
+        return;
+
+    if (input::pressed(input::UP)) {
         sound::play(mainMenuSfxLow_);
         --mainMenuIndex_;
-        if(mainMenuIndex_ < 0)
+        if (mainMenuIndex_ < 0)
             mainMenuIndex_ = 2;
     }
-    if(input::pressed(input::DOWN)) {
+
+    if (mainMenuIndex_ == 1) {
+        if (input::pressed(input::LEFT)) {
+            --gotoIndex_;
+            if (gotoIndex_ < 0)
+                gotoIndex_ = game_->highestLevelReached();
+        }
+        if (input::pressed(input::RIGHT)) {
+            ++gotoIndex_;
+            if (gotoIndex_ > game_->highestLevelReached())
+                gotoIndex_ = 0;
+        }
+    }
+
+    if (input::pressed(input::DOWN)) {
         sound::play(mainMenuSfxLow_);
         mainMenuIndex_ = (mainMenuIndex_ + 1) % 3;
     }
 
-    if(input::released(input::ACCEPT)) {
+    if (input::pressed(input::ACCEPT)) {
         sound::play(mainMenuSfxHigh_);
-        switch(mainMenuIndex_) {
+        switch (mainMenuIndex_) {
             case 0: // Continue
+                switchView(VIEW_GAME);
+                break;
+            case 1: // Go
+                game_->switchLevel(gotoIndex_);
                 switchView(VIEW_GAME);
                 break;
             case 2: // Quit
@@ -191,15 +222,20 @@ void App::mainMenuRender()
     gfx::draw(os::windowWidth() / 2.0f, os::windowHeight() * 0.05f, logoWidth, logoHeight, &mainMenuLogo_, nullptr, 0.5f, 0.0f);
 
     float menuFontSize = 0.05f * os::windowHeight();
-    gfx::Color unselectedColor = { 255, 255, 255, 255 };
+    gfx::Color unselectedColor = { 128, 128, 128, 255 };
     gfx::Color selectedColor = { 46, 201, 112, 255 };
-    if(input::held(input::ACCEPT)) {
+    if (input::held(input::ACCEPT)) {
         selectedColor = { 234, 77, 60, 255 };
     }
     float y = os::windowHeight() / 2.0f;
     gfx::drawText(os::winWf() / 2, y, "Continue", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 0) ? &selectedColor : &unselectedColor);
     y += menuFontSize * 2.0f;
-    gfx::drawText(os::winWf() / 2, y, "New Game", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 1) ? &selectedColor : &unselectedColor);
+
+    char gotoString[1024];
+    Level * level =  game_->getLevel(gotoIndex_);
+    sprintf(gotoString, "< Go: %d - \"%s\"", gotoIndex_ + 1, level->title_.c_str());
+
+    gfx::drawText(os::winWf() / 2, y, gotoString, mainMenuFont_, menuFontSize, (mainMenuIndex_ == 1) ? &selectedColor : &unselectedColor);
     y += menuFontSize * 2.0f;
     gfx::drawText(os::winWf() / 2, y, "Quit", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 2) ? &selectedColor : &unselectedColor);
 }
@@ -225,4 +261,35 @@ void App::gameUpdate()
 void App::gameRender()
 {
     game_->render();
+}
+
+// --------------------------------------------------------------------------------------
+// Finale
+
+void App::finaleEnter()
+{
+    sound::play(finaleBGM_);
+}
+
+void App::finaleLeave()
+{
+    sound::stop(finaleBGM_);
+}
+
+void App::finaleUpdate()
+{
+    if (viewElapsedMS() < 250)
+        return;
+
+    if (input::pressed(input::ACCEPT) || input::pressed(input::CANCEL) || input::pressed(input::START)) {
+        switchView(VIEW_MAINMENU);
+    }
+}
+
+void App::finaleRender()
+{
+    float fontSize = 0.05f * os::windowHeight();
+    gfx::Color textColor = { 255, 0, 255, 255 };
+    gfx::drawText((float)os::windowWidth() / 2, (float)os::windowHeight() / 2, "Insert Finale Here", mainMenuFont_, fontSize, &textColor);
+    gfx::drawText(os::winWf() / 2.0f, (fontSize * 2) + (os::winHf() / 2.0f), "Press any key for main menu", mainMenuFont_, fontSize, &textColor);
 }

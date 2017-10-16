@@ -68,12 +68,13 @@ Game::~Game()
 void Game::enter()
 {
     if (!switchedLevelOnce_) {
-        switchLevel(0);
+        switchLevel(highestLevelReached_);
     }
 }
 
 void Game::leave()
 {
+    enableBGM(false);
 }
 
 void Game::update()
@@ -122,11 +123,13 @@ void Game::loadResources()
     soundStep_ = sound::loadOGG("data/step.ogg", 2, false);
     soundReset_ = sound::loadOGG("data/reset.ogg", 1, false);
     soundFanfare_ = sound::loadOGG("data/fanfare.ogg", 1, false);
-    bgmConfirm_ = sound::loadOGG("data/confirm.ogg", 1, true);
     bgmGame_ = sound::loadOGG("data/game.ogg", 1, true);
-    bgmGamePlaying_ = false;
+    bgmConfirm_ = sound::loadOGG("data/confirm.ogg", 1, true);
+    bgmRewind_ = sound::loadOGG("data/rewind.ogg", 1, true);
+    bgmPlaying_ = false;
 
     loadLevels();
+    loadProgress();
 
     gfx::Spritesheet sheet;
     sheet.load("art");
@@ -154,6 +157,9 @@ void Game::loadResources()
     gameOffsetY_ += os::winHf() * LOGO_HEIGHT;
 
     walkSpeed_ = WALK_SLOW;
+
+    bgmCurrent_ = bgmGame_;
+    bgmPlaying_ = false;
 }
 
 void Game::loadLevels()
@@ -192,6 +198,31 @@ void Game::loadLevels()
     cJSON_Delete(json);
 }
 
+void Game::loadProgress()
+{
+    // Set defaults here
+    highestLevelReached_ = 0;
+
+    std::string jsonString;
+    if (os::readFile("save.json", jsonString)) {
+        cJSON * json = cJSON_Parse(jsonString.c_str());
+        if(json && cJSON_IsObject(json)) {
+            cJSON * jsonHighestLevelReached_ = cJSON_GetObjectItem(json, "highestLevelReached");
+            if(jsonHighestLevelReached_ && cJSON_IsNumber(jsonHighestLevelReached_)) {
+                highestLevelReached_ = min(jsonHighestLevelReached_->valueint, (int)levels_.size() - 1);
+            }
+        }
+    }
+}
+
+void Game::saveProgress()
+{
+    // Someday this might be more complicated. That day is not today.
+    char progress[512];
+    sprintf(progress, "{\"highestLevelReached\":%d}", highestLevelReached_);
+    os::writeFile("save.json", progress);
+}
+
 void Game::switchLevel(int index)
 {
     switchedLevelOnce_ = true;
@@ -199,6 +230,11 @@ void Game::switchLevel(int index)
     assert(index >= 0);
     assert(index < (int)levels_.size());
     currentLevelIndex_ = index;
+
+    if(highestLevelReached_ < index) {
+        highestLevelReached_ = index;
+        saveProgress();
+    }
 
     resetLevel();
 
@@ -217,14 +253,26 @@ void Game::resetLevel()
     undo_.clear();
 }
 
-void Game::enableGameBGM(bool playing)
+void Game::enableBGM(bool playing)
 {
-    if (bgmGamePlaying_ != playing) {
-        bgmGamePlaying_ = playing;
-        if (bgmGamePlaying_) {
-            sound::play(bgmGame_);
+    os::printf("enableBGM(%s)\n", playing ? "true" : "false");
+    if (bgmPlaying_ != playing) {
+        bgmPlaying_ = playing;
+        if (bgmPlaying_) {
+            sound::play(bgmCurrent_);
         } else {
-            sound::stop(bgmGame_);
+            sound::stop(bgmCurrent_);
+        }
+    }
+}
+
+void Game::switchBGM(int bgm)
+{
+    if (bgmCurrent_ != bgm) {
+        sound::stop(bgmCurrent_);
+        bgmCurrent_ = bgm;
+        if (bgmPlaying_) {
+            sound::play(bgmCurrent_);
         }
     }
 }
@@ -311,25 +359,30 @@ void Game::move(Game::Direction dir)
     sound::play(soundStep_);
 }
 
-void Game::rewind()
+bool Game::rewind()
 {
-    if (!undo_.empty()) {
-        MoveAction undoAction = undo_.back();
-        undo_.pop_back();
+    if (undo_.empty())
+        return false;
 
-        moveAction_.playerX_ = undoAction.playerTravelX_;
-        moveAction_.playerY_ = undoAction.playerTravelY_;
-        moveAction_.playerTravelX_ = undoAction.playerX_;
-        moveAction_.playerTravelY_ = undoAction.playerY_;
-        moveAction_.boxX_ = undoAction.boxTravelX_;
-        moveAction_.boxY_ = undoAction.boxTravelY_;
-        moveAction_.boxTravelX_ = undoAction.boxX_;
-        moveAction_.boxTravelY_ = undoAction.boxY_;
-        playerFacing_ = undoAction.playerFacing_;
-        walkSpeed_ = WALK_REWIND;
-        moving_ = true;
-        switchState(STATE_MOVE);
-    }
+    MoveAction undoAction = undo_.back();
+    undo_.pop_back();
+
+    moveAction_.playerX_ = undoAction.playerTravelX_;
+    moveAction_.playerY_ = undoAction.playerTravelY_;
+    moveAction_.playerTravelX_ = undoAction.playerX_;
+    moveAction_.playerTravelY_ = undoAction.playerY_;
+    moveAction_.boxX_ = undoAction.boxTravelX_;
+    moveAction_.boxY_ = undoAction.boxTravelY_;
+    moveAction_.boxTravelX_ = undoAction.boxX_;
+    moveAction_.boxTravelY_ = undoAction.boxY_;
+    playerFacing_ = undoAction.playerFacing_;
+    walkSpeed_ = WALK_REWIND;
+    moving_ = true;
+    switchState(STATE_MOVE);
+
+    switchBGM(bgmRewind_);
+    enableBGM(true);
+    return true;
 }
 
 // --------------------------------------------------------------------------------------
@@ -337,12 +390,12 @@ void Game::rewind()
 
 void Game::newLevelEnter()
 {
+    enableBGM(false);
     sound::play(soundNewLevel_);
 }
 
 void Game::newLevelLeave()
 {
-    enableGameBGM(true);
 }
 
 void Game::newLevelUpdate()
@@ -361,12 +414,12 @@ void Game::newLevelRender()
 
 void Game::pauseMenuEnter()
 {
-    enableGameBGM(false);
+    enableBGM(false);
 }
 
 void Game::pauseMenuLeave()
 {
-    enableGameBGM(true);
+    enableBGM(true);
 }
 
 void Game::pauseMenuUpdate()
@@ -395,7 +448,7 @@ void Game::renderFanfareOverlay(float p)
 
 void Game::fanfareEnter()
 {
-    enableGameBGM(false);
+    enableBGM(false);
     sound::play(soundFanfare_);
 }
 
@@ -421,19 +474,24 @@ void Game::fanfareRender()
 
 void Game::confirmNextEnter()
 {
-    sound::play(bgmConfirm_);
+    switchBGM(bgmConfirm_);
+    enableBGM(true);
 }
 
 void Game::confirmNextLeave()
 {
-    sound::stop(bgmConfirm_);
 }
 
 void Game::confirmNextUpdate()
 {
     if (input::pressed(input::ACCEPT)) {
-        switchLevel(currentLevelIndex_ + 1);
-        switchState(STATE_NEWLEVEL);
+        if ((currentLevelIndex_ + 1) >= levels_.size()) {
+            switchLevel(0);
+            app_->switchView(App::VIEW_FINALE);
+        } else {
+            switchLevel(currentLevelIndex_ + 1);
+            switchState(STATE_NEWLEVEL);
+        }
     }
 }
 
@@ -467,19 +525,24 @@ void Game::idleUpdate()
     playerDrawX_ = gameOffsetX_ + (playerX_ * cellSize_);
     playerDrawY_ = gameOffsetY_ + (playerY_ * cellSize_);
 
-    if (input::pressed(input::START)) {
-        app_->switchView(App::VIEW_MAINMENU);
-        return;
+    if (input::held(input::CANCEL)) {
+        if (rewind())
+            return;
     }
 
-    if (currentLevel_.win() /* || input::pressed(input::CANCEL) */) {
+    switchBGM(bgmGame_);
+    enableBGM(true);
+
+    if (currentLevel_.win()
+        || input::pressed(input::CANCEL)
+        )
+    {
         switchState(STATE_FANFARE);
         return;
     }
 
-    if (input::held(input::CANCEL)) {
-        // sound::play(soundReset_);
-        rewind();
+    if (input::pressed(input::START)) {
+        app_->switchView(App::VIEW_MAINMENU);
         return;
     }
 

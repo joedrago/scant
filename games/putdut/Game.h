@@ -32,7 +32,7 @@ public:
     static const int WALK_FAST = 50;
     static const int WALK_REWIND = 50;
 
-    Game(App *app);
+    Game(App * app);
     ~Game();
 
     void enter();
@@ -45,10 +45,14 @@ public:
     void loadResources();
     void loadLevels();
 
+    void loadProgress();
+    void saveProgress();
+
     void switchLevel(int index);
     void resetLevel();
 
-    void enableGameBGM(bool playing);
+    void enableBGM(bool playing);
+    void switchBGM(int bgm);
 
     void renderLevel();
     void renderFanfareOverlay(float p);
@@ -81,7 +85,7 @@ public:
     void moveLeave();
     void moveUpdate();
 
-    const char *debugStateName() const;
+    const char * debugStateName() const;
 
     typedef void (Game::* enterFunction)();
     typedef void (Game::* leaveFunction)();
@@ -106,11 +110,11 @@ public:
         DIRECTION_COUNT
     };
 
-    bool calcMovePos(Direction dir, int x, int y, int &ox, int &oy);
+    bool calcMovePos(Direction dir, int x, int y, int & ox, int & oy);
     void move(Direction dir);
-    void rewind();
+    bool rewind();
 
-    void calcLerpDraw(float p, int srcX, int srcY, int dstX, int dstY, float &drawX, float &drawY);
+    void calcLerpDraw(float p, int srcX, int srcY, int dstX, int dstY, float & drawX, float & drawY);
 
     struct MoveAction
     {
@@ -125,9 +129,12 @@ public:
         Direction playerFacing_;
     };
 
+    inline int highestLevelReached() { return highestLevelReached_; }
+    inline Level * getLevel(int index) { return levels_[index]; }
+
 protected:
     bool switchedLevelOnce_;
-    App *app_;
+    App * app_;
     State currentState_;
     uint64_t currentStateEnterTime_;
     StateFuncs stateFuncs_[STATE_COUNT];
@@ -141,7 +148,9 @@ protected:
     int soundFanfare_;
     int bgmGame_;
     int bgmConfirm_;
-    bool bgmGamePlaying_;
+    int bgmRewind_;
+    int bgmCurrent_;
+    bool bgmPlaying_;
     gfx::Cycle artWalls_;
     gfx::Cycle artFloors_;
     gfx::DrawSource artDest_;
@@ -157,6 +166,7 @@ protected:
     // Level info
     std::vector<Level *> levels_;
     Level currentLevel_;
+    int highestLevelReached_;
 
     // Game state
     int currentLevelIndex_;

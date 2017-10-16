@@ -27,6 +27,7 @@ inline float winHf() { return (float)windowHeight(); }
 
 bool readFile(const char * path, std::vector<unsigned char> & bytes);
 bool readFile(const char * path, std::string & s);
+bool writeFile(const char * path, const std::string & s);
 
 template<class T>
 constexpr const T & clamp(const T & v, const T & lo, const T & hi)
