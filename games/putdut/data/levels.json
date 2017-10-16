@@ -1,6 +1,6 @@
 [
   {
-    "title": "Mario\r",
+    "title": "Mario",
     "lines": [
       "                                ",
       "                                ",
@@ -13,11 +13,11 @@
       "         X*__X                  ",
       "       XXX__*XXX                ",
       "       X__*__*_X                ",
-      "     XXX_X_XXX_X_____XXXXXX     ",
+      "     XXX_X_XXX_X     XXXXXX     ",
       "     X___X_XXX_XXXXXXX__..X     ",
       "     X_*__*_____________..X     ",
       "     XXXXX_XXXX_X@XXXX__..X     ",
-      "         X______XXX__XXXXXX     ",
+      "         X______XXX  XXXXXX     ",
       "         XXXXXXXX               ",
       "                                ",
       "                                ",
@@ -29,7 +29,7 @@
     ]
   },
   {
-    "title": "Luigi\r",
+    "title": "Luigi",
     "lines": [
       "                                ",
       "                                ",
@@ -58,7 +58,7 @@
     ]
   },
   {
-    "title": "Robin\r",
+    "title": "Robin",
     "lines": [
       "                                ",
       "                                ",
@@ -87,7 +87,7 @@
     ]
   },
   {
-    "title": "Cloud\r",
+    "title": "Cloud",
     "lines": [
       "                                ",
       "                                ",
@@ -116,7 +116,7 @@
     ]
   },
   {
-    "title": "Jigglypuff\r",
+    "title": "Jigglypuff",
     "lines": [
       "                                ",
       "                                ",
@@ -145,7 +145,7 @@
     ]
   },
   {
-    "title": "Link\r",
+    "title": "Link",
     "lines": [
       "                                ",
       "                                ",
@@ -153,8 +153,8 @@
       "                                ",
       "                                ",
       "                                ",
-      "          XXXXXX__XXX           ",
-      "          X..__X_XX@XX          ",
+      "          XXXXXX  XXX           ",
+      "          X..__X XX@XX          ",
       "          X..__XXX___X          ",
       "          X.._____**_X          ",
       "          X..__X_X_*_X          ",
@@ -174,7 +174,7 @@
     ]
   },
   {
-    "title": "Toon Link\r",
+    "title": "Toon Link",
     "lines": [
       "                                ",
       "                                ",
@@ -191,8 +191,8 @@
       "         X_*__XXX_..X           ",
       "         X_*_*_*_...X           ",
       "         X____XXX...X           ",
-      "         X_**_X_X...X           ",
-      "         X__XXX_XXXXX           ",
+      "         X_**_X X...X           ",
+      "         X__XXX XXXXX           ",
       "         XXXX                   ",
       "                                ",
       "                                ",
@@ -203,7 +203,7 @@
     ]
   },
   {
-    "title": "Diddy Kong\r",
+    "title": "Diddy Kong",
     "lines": [
       "                                ",
       "                                ",
@@ -232,7 +232,7 @@
     ]
   },
   {
-    "title": "Squirtle\r",
+    "title": "Squirtle",
     "lines": [
       "                                ",
       "                                ",
@@ -261,7 +261,7 @@
     ]
   },
   {
-    "title": "Pichu\r",
+    "title": "Pichu",
     "lines": [
       "                                ",
       "                                ",
@@ -269,7 +269,7 @@
       "              XXXXXX__X         ",
       "              X_______X         ",
       "              X__XXXX_XXX       ",
-      "      XXX__XXXXX_XXX____X       ",
+      "      XXX  XXXXX_XXX____X       ",
       "     XX@XXXX___***_X____X       ",
       "     X_**___**_*___X....XX      ",
       "     X__***X____*__X.....X      ",
@@ -290,14 +290,14 @@
     ]
   },
   {
-    "title": "Pokemon Trainer\r",
+    "title": "Pokemon Trainer",
     "lines": [
       "                                ",
       "                                ",
       "                                ",
       "                                ",
       "                XXXX            ",
-      "           XXXX_X__X            ",
+      "           XXXX X__X            ",
       "         XXX__XXX*_X            ",
       "        XX___@__*__X            ",
       "       XX__*_**XX_XX            ",
@@ -307,7 +307,7 @@
       "      XXXX____X__**_X___X       ",
       "      XXXX_XX_*_________X       ",
       "      X.____XXX__XXXXXXXX       ",
-      "      X.._..X_XXXX              ",
+      "      X.._..X XXXX              ",
       "      X...X.X                   ",
       "      X.....X                   ",
       "      XXXXXXX                   ",
@@ -319,7 +319,7 @@
     ]
   },
   {
-    "title": "Lucario\r",
+    "title": "Lucario",
     "lines": [
       "                                ",
       "                                ",
@@ -348,7 +348,7 @@
     ]
   },
   {
-    "title": "Mega Man\r",
+    "title": "Mega Man",
     "lines": [
       "                                ",
       "                                ",
@@ -366,7 +366,7 @@
       "      X_*_XX___X__X*X.X._X      ",
       "      XX_**__*___*__*..._X      ",
       "       X*__XXXXXX____XX__X      ",
-      "       X___X____XXXXXXXXXX      ",
+      "       X___X    XXXXXXXXXX      ",
       "       XXXXX                    ",
       "                                ",
       "                                ",
@@ -377,7 +377,7 @@
     ]
   },
   {
-    "title": "Greninja\r",
+    "title": "Greninja",
     "lines": [
       "                                ",
       "                                ",
@@ -406,7 +406,7 @@
     ]
   },
   {
-    "title": "Zero Suit Samus\r",
+    "title": "Zero Suit Samus",
     "lines": [
       "                                ",
       "                                ",
@@ -435,7 +435,7 @@
     ]
   },
   {
-    "title": "Young Link\r",
+    "title": "Young Link",
     "lines": [
       "                                ",
       "                                ",
@@ -443,7 +443,7 @@
       "                                ",
       "         XXXXX                  ",
       "         X___XX                 ",
-      "         X____X__XXXX           ",
+      "         X____X  XXXX           ",
       "         X_*__XXXX__X           ",
       "         X__**_*___*X           ",
       "         XXX@_X*____XX          ",
@@ -464,7 +464,7 @@
     ]
   },
   {
-    "title": "Meta Knight\r",
+    "title": "Meta Knight",
     "lines": [
       "                                ",
       "                                ",
@@ -493,7 +493,7 @@
     ]
   },
   {
-    "title": "R.O.B.\r",
+    "title": "R.O.B.",
     "lines": [
       "                                ",
       "                                ",
@@ -522,7 +522,7 @@
     ]
   },
   {
-    "title": "Mewtwo\r",
+    "title": "Mewtwo",
     "lines": [
       "                                ",
       "                                ",
@@ -544,14 +544,14 @@
       "  X_****____XXXXXX*XX___X.XX.X  ",
       "  XX____XX______________X....X  ",
       "   XX__XXXXXXXXXXXXXXX___....X  ",
-      "    X__X_____________XXXXX__XX  ",
-      "    XXXX_________________XXXX   ",
+      "    X__X             XXXXX__XX  ",
+      "    XXXX                 XXXX   ",
       "                                ",
       "                                "
     ]
   },
   {
-    "title": "Lucina\r",
+    "title": "Lucina",
     "lines": [
       "                                ",
       "                                ",
@@ -580,7 +580,7 @@
     ]
   },
   {
-    "title": "Fox\r",
+    "title": "Fox",
     "lines": [
       "                                ",
       "                                ",
@@ -609,7 +609,7 @@
     ]
   },
   {
-    "title": "King Dedede\r",
+    "title": "King Dedede",
     "lines": [
       "                                ",
       "                                ",
@@ -638,7 +638,7 @@
     ]
   },
   {
-    "title": "Ryu\r",
+    "title": "Ryu",
     "lines": [
       "                                ",
       "                                ",
@@ -667,7 +667,7 @@
     ]
   },
   {
-    "title": "Falco\r",
+    "title": "Falco",
     "lines": [
       "                                ",
       "                                ",
@@ -696,7 +696,7 @@
     ]
   },
   {
-    "title": "Ike\r",
+    "title": "Ike",
     "lines": [
       "                                ",
       "                                ",
@@ -716,8 +716,8 @@
       "    X_X____*_____X___X_...X     ",
       "    X_X___XX_XX_____XXX...X     ",
       "    X_XXXXXX*XXXXXX__XXXXXX     ",
-      "    X________X____X__X          ",
-      "    XXXXXXXXXX____XXXX          ",
+      "    X________X    X__X          ",
+      "    XXXXXXXXXX    XXXX          ",
       "                                ",
       "                                ",
       "                                ",
@@ -725,7 +725,7 @@
     ]
   },
   {
-    "title": "Wario\r",
+    "title": "Wario",
     "lines": [
       "                                ",
       "                                ",
@@ -754,7 +754,7 @@
     ]
   },
   {
-    "title": "Pac-Man\r",
+    "title": "Pac-Man",
     "lines": [
       "                                ",
       "                                ",
@@ -772,7 +772,7 @@
       "     X__XX_XXX_X__XXXXX*X_X     ",
       "     X_*_**_____*___*_____X     ",
       "     X_*____*XX*_XXXXXXXX_X     ",
-      "     XXXXXXX__@_XX______XXX     ",
+      "     XXXXXXX__@_XX      XXX     ",
       "           XXXXXX               ",
       "                                ",
       "                                ",
@@ -783,7 +783,7 @@
     ]
   },
   {
-    "title": "Donkey Kong\r",
+    "title": "Donkey Kong",
     "lines": [
       "                                ",
       "                                ",
@@ -812,7 +812,7 @@
     ]
   },
   {
-    "title": "Roy\r",
+    "title": "Roy",
     "lines": [
       "                                ",
       "                                ",
@@ -821,7 +821,7 @@
       "                                ",
       "                                ",
       "                    XXXXX       ",
-      "           XXXXXX_XXX___XXXX    ",
+      "           XXXXXX XXX___XXXX    ",
       "       XXXXX____XXX_*_*__*_X    ",
       "    XXXX__XX_X*_*____*_X___X    ",
       "    X....___**_*_*__*___X*XX    ",
@@ -829,7 +829,7 @@
       "    X....____X_XXX____X____X    ",
       "    X....____X_XX__*__XXX*_X    ",
       "    X..XXXXXX__*__X__XXXX_XX    ",
-      "    XXXX____X___XXX____@__X     ",
+      "    XXXX    X___XXX____@__X     ",
       "            XXXXXXXXXXXXXXX     ",
       "                                ",
       "                                ",
@@ -841,7 +841,7 @@
     ]
   },
   {
-    "title": "Dark Pit\r",
+    "title": "Dark Pit",
     "lines": [
       "                                ",
       "                                ",
@@ -870,7 +870,7 @@
     ]
   },
   {
-    "title": "Pikachu\r",
+    "title": "Pikachu",
     "lines": [
       "                                ",
       "                                ",
@@ -899,7 +899,7 @@
     ]
   },
   {
-    "title": "Ness\r",
+    "title": "Ness",
     "lines": [
       "                                ",
       "                                ",
@@ -928,7 +928,7 @@
     ]
   },
   {
-    "title": "Peach\r",
+    "title": "Peach",
     "lines": [
       "                                ",
       "                                ",
@@ -957,7 +957,7 @@
     ]
   },
   {
-    "title": "Ganondorf\r",
+    "title": "Ganondorf",
     "lines": [
       "                                ",
       "                                ",
@@ -986,13 +986,13 @@
     ]
   },
   {
-    "title": "Rosalina\r",
+    "title": "Rosalina",
     "lines": [
       "                                ",
       "                                ",
       "                                ",
       "                                ",
-      "      XXXXXXXXXXXX__XXXXXX      ",
+      "      XXXXXXXXXXXX  XXXXXX      ",
       "      X___X____X@XXXX....X      ",
       "      X___**X_______.....X      ",
       "      X___X_XXX___XX_....X      ",
@@ -1006,8 +1006,8 @@
       "      X__*_XX_XX_X_X            ",
       "      X_**_____**__X            ",
       "      XX_XX_XXX_*__X            ",
-      "       X____X_X____X            ",
-      "       XXXXXX_XXXXXX            ",
+      "       X____X X____X            ",
+      "       XXXXXX XXXXXX            ",
       "                                ",
       "                                ",
       "                                ",
@@ -1015,7 +1015,7 @@
     ]
   },
   {
-    "title": "Ivysaur\r",
+    "title": "Ivysaur",
     "lines": [
       "                                ",
       "                                ",
@@ -1023,8 +1023,8 @@
       "          XXX__XX               ",
       "       XXXX__*__X               ",
       "       X___*_*__XXXX            ",
-      "       X_*___X_*___X_XXXX       ",
-      "       X__X__X___*_X_X..X       ",
+      "       X_*___X_*___X XXXX       ",
+      "       X__X__X___*_X X..X       ",
       "       XX*X*_XXXX*XXXX..X       ",
       "        X___XXXXX_XX_...X       ",
       "        X*X_XX@XX_XX__..X       ",
@@ -1032,11 +1032,11 @@
       "        X___XXXX_XXX__..X       ",
       "        XXX_XX_X__XX_...X       ",
       "         XX*_XXXX*_XXX..X       ",
-      "         X___XX____X_X..X       ",
-      "        XX_**XX__*_X_XXXX       ",
+      "         X___XX____X X..X       ",
+      "        XX_**XX__*_X XXXX       ",
       "        X_____****_X            ",
       "        X_*_XXX____X            ",
-      "        X___X_XXXXXX            ",
+      "        X___X XXXXXX            ",
       "        XXXXX                   ",
       "                                ",
       "                                ",
@@ -1044,7 +1044,7 @@
     ]
   },
   {
-    "title": "Pit\r",
+    "title": "Pit",
     "lines": [
       "                                ",
       "                                ",
@@ -1073,7 +1073,7 @@
     ]
   },
   {
-    "title": "Sonic\r",
+    "title": "Sonic",
     "lines": [
       "                                ",
       "                                ",
@@ -1102,7 +1102,7 @@
     ]
   },
   {
-    "title": "Snake\r",
+    "title": "Snake",
     "lines": [
       "                                ",
       "                                ",
@@ -1118,7 +1118,7 @@
       "    X__*_XX_*__X_XX_XXX__X      ",
       "    XX_XXXXX_XXX_________X      ",
       "    XX___*__*_XXXXX_XXX__X      ",
-      "    X_*XXX__X_XXXXX_X_XXXX      ",
+      "    X_*XXX__X_XXXXX_X XXXX      ",
       "    X___*___X_______X           ",
       "    X__*_X*_*_*XXX__X           ",
       "    X_***X_*___X_XXXX           ",
@@ -1131,7 +1131,7 @@
     ]
   },
   {
-    "title": "Dr. Mario\r",
+    "title": "Dr. Mario",
     "lines": [
       "                                ",
       "                                ",
@@ -1160,7 +1160,7 @@
     ]
   },
   {
-    "title": "Wolf\r",
+    "title": "Wolf",
     "lines": [
       "                                ",
       "                                ",
@@ -1172,7 +1172,7 @@
       "              XX__**__X         ",
       "             XX_**__*_X         ",
       "             X_*____*_X         ",
-      "      XXXX___X___**_XXXXX       ",
+      "      XXXX   X___**_XXXXX       ",
       "      X__XXXXXXXX_XX____X       ",
       "      X..___________***@X       ",
       "      X.X_XXXXXXX_XX___XX       ",
@@ -1189,7 +1189,7 @@
     ]
   },
   {
-    "title": "Little Mac\r",
+    "title": "Little Mac",
     "lines": [
       "                                ",
       "                                ",
@@ -1218,7 +1218,7 @@
     ]
   },
   {
-    "title": "Wii Fit Trainer\r",
+    "title": "Wii Fit Trainer",
     "lines": [
       "                                ",
       "                                ",
@@ -1247,7 +1247,7 @@
     ]
   },
   {
-    "title": "Lucas\r",
+    "title": "Lucas",
     "lines": [
       "                                ",
       "                                ",
@@ -1276,7 +1276,7 @@
     ]
   },
   {
-    "title": "Yoshi\r",
+    "title": "Yoshi",
     "lines": [
       "                                ",
       "                                ",
@@ -1293,7 +1293,7 @@
       "      X...____X_XX__X___X       ",
       "      X...X____@_X_XXX_XX       ",
       "      X...X__XXX__*__*__X       ",
-      "      XXXXXXXX_XX___X___X       ",
+      "      XXXXXXXX XX___X___X       ",
       "                XXXXXXXXX       ",
       "                                ",
       "                                ",
@@ -1305,12 +1305,12 @@
     ]
   },
   {
-    "title": "Marth\r",
+    "title": "Marth",
     "lines": [
       "                                ",
       "                                ",
       "                                ",
-      "         XXXXXXXXX__XXXX        ",
+      "         XXXXXXXXX  XXXX        ",
       "         X___XX__XXXX__X        ",
       "         X___*___X__*__X        ",
       "         X__X_XX_X_____XXXX     ",
@@ -1334,7 +1334,7 @@
     ]
   },
   {
-    "title": "Olimar\r",
+    "title": "Olimar",
     "lines": [
       "                                ",
       "                                ",
@@ -1363,7 +1363,7 @@
     ]
   },
   {
-    "title": "Kirby\r",
+    "title": "Kirby",
     "lines": [
       "                                ",
       "                                ",
@@ -1392,7 +1392,7 @@
     ]
   },
   {
-    "title": "Duck Hunt\r",
+    "title": "Duck Hunt",
     "lines": [
       "                                ",
       "                                ",
@@ -1410,10 +1410,10 @@
       "      XXX**___X_X_X_X_X         ",
       "        X___*___X_X_XXXXX       ",
       "        X_*X_XXXXX______X       ",
-      "        X*___X___X___X__X       ",
-      "        X__XXX___XX_____X       ",
-      "        X__X______X____XX       ",
-      "        XXXX______XXXXXX        ",
+      "        X*___X   X___X__X       ",
+      "        X__XXX   XX_____X       ",
+      "        X__X      X____XX       ",
+      "        XXXX      XXXXXX        ",
       "                                ",
       "                                ",
       "                                ",
@@ -1421,7 +1421,7 @@
     ]
   },
   {
-    "title": "Samus\r",
+    "title": "Samus",
     "lines": [
       "                                ",
       "                                ",
@@ -1442,7 +1442,7 @@
       "       X.......X_**_X*_X_X      ",
       "       X.......X_________X      ",
       "       X.......XXXXXXX__XX      ",
-      "       XXXXXXXXX_____XXXX       ",
+      "       XXXXXXXXX     XXXX       ",
       "                                ",
       "                                ",
       "                                ",
@@ -1450,15 +1450,15 @@
     ]
   },
   {
-    "title": "Ice Climbers\r",
+    "title": "Ice Climbers",
     "lines": [
       "                                ",
       "                                ",
       "                                ",
       "                                ",
       "                                ",
-      "        XXXXX_XXXX              ",
-      "        X...X_X__XXXX           ",
+      "        XXXXX XXXX              ",
+      "        X...X X__XXXX           ",
       "        X...XXX__*__X           ",
       "        X....XX_*__*XXX         ",
       "        XX....XX___*__X         ",
@@ -1469,7 +1469,7 @@
       "        X__*_@_*____*__X        ",
       "        X___X_*_**_*_XXX        ",
       "        X__XXXXXX__XXX          ",
-      "        X_XX____XXXX            ",
+      "        X_XX    XXXX            ",
       "        XXX                     ",
       "                                ",
       "                                ",
@@ -1479,7 +1479,7 @@
     ]
   },
   {
-    "title": "Captain Falcon\r",
+    "title": "Captain Falcon",
     "lines": [
       "                                ",
       "                                ",
@@ -1488,7 +1488,7 @@
       "                                ",
       "      XXXX                      ",
       "     XX__XXXXX                  ",
-      "     X_______X_XXXXX            ",
+      "     X_______X XXXXX            ",
       "     X_*XXX__XXX___X            ",
       "     X..X__*X_X__X_X            ",
       "     X..X______**X_XXX          ",
@@ -1508,7 +1508,7 @@
     ]
   },
   {
-    "title": "Mr. Game & Watch\r",
+    "title": "Mr. Game & Watch",
     "lines": [
       "                                ",
       "                                ",
@@ -1537,7 +1537,7 @@
     ]
   },
   {
-    "title": "Sheik\r",
+    "title": "Sheik",
     "lines": [
       "                                ",
       "                                ",
@@ -1566,7 +1566,7 @@
     ]
   },
   {
-    "title": "Charizard\r",
+    "title": "Charizard",
     "lines": [
       "                                ",
       "                                ",
@@ -1595,7 +1595,7 @@
     ]
   },
   {
-    "title": "Palutena\r",
+    "title": "Palutena",
     "lines": [
       "                                ",
       "                                ",
@@ -1624,7 +1624,7 @@
     ]
   },
   {
-    "title": "Villager\r",
+    "title": "Villager",
     "lines": [
       "                                ",
       "                                ",
@@ -1653,7 +1653,7 @@
     ]
   },
   {
-    "title": "Bowser Jr.\r",
+    "title": "Bowser Jr.",
     "lines": [
       "                                ",
       "                                ",
@@ -1661,7 +1661,7 @@
       "            XXXXX____X          ",
       "            X__XX_X__XXXXX      ",
       "            X___&.X..X___X      ",
-      "   XXXXX_XXXX_*X.X...____X      ",
+      "   XXXXX XXXX_*X.X...____X      ",
       "   X___XXX__XX_X&....XX_XX      ",
       "   X_*______XX_X..X..XX_X       ",
       "  XXXXXX_X___X_X&.XXXXX_X       ",
@@ -1672,17 +1672,17 @@
       "   XXX*XXX*XXX__XXXX_XX_X       ",
       "  XXXX_X_________XXX__X_X       ",
       "  X__*_X__*XXXX__XXX**X@XXXXX   ",
-      "  X______*_X_X__XXXX__X*X___X   ",
-      "  XXXX_X__*X_X______________X   ",
-      "     X__*__X_XX__XX__XXXXXXXX   ",
-      "     XX__XXX__XXXXXXXX          ",
+      "  X______*_X X__XXXX__X*X___X   ",
+      "  XXXX_X__*X X______________X   ",
+      "     X__*__X XX__XX__XXXXXXXX   ",
+      "     XX__XXX  XXXXXXXX          ",
       "      XXXX                      ",
       "                                ",
       "                                "
     ]
   },
   {
-    "title": "Bowser\r",
+    "title": "Bowser",
     "lines": [
       "                                ",
       "                                ",
@@ -1704,14 +1704,14 @@
       " XX_X__*__X_X_*XX__XX....&.XXX  ",
       " XX_XX__*__X_*_X__X....&.XXX    ",
       " X____*_XXXX___X_....&.XXX      ",
-      " X___X__X__X__X__..&.XXX        ",
-      " XXXXXXXX__XXXXXXXXXXX          ",
+      " X___X__X  X__X__..&.XXX        ",
+      " XXXXXXXX  XXXXXXXXXXX          ",
       "                                ",
       "                                "
     ]
   },
   {
-    "title": "Zelda\r",
+    "title": "Zelda",
     "lines": [
       "                                ",
       "                                ",
@@ -1719,7 +1719,7 @@
       "                                ",
       "           XXXXX                ",
       "           X___XXXX             ",
-      "           X_*____XXXX__XXXX    ",
+      "           X_*____XXXX  XXXX    ",
       "           X___X_*X__XXXX__X    ",
       "   XXXXXXXXXXX_X___*___X___X    ",
       "   X.._____X_*__XXXX_X__X__X    ",
@@ -1732,7 +1732,7 @@
       "   X..XXXXXXX__XXX_XXXXXX.XX    ",
       "   X_**__________________&.XX   ",
       "   X__XXXXXXXXXXXXXXXXXX__..X   ",
-      "   XXXX________________XXXXXX   ",
+      "   XXXX                XXXXXX   ",
       "                                ",
       "                                ",
       "                                ",
