@@ -5,6 +5,8 @@
 #include "input/input.h"
 #include "sound/sound.h"
 
+#include "version.h"
+
 #include <memory.h>
 
 App::App()
@@ -239,6 +241,13 @@ void App::mainMenuRender()
     gfx::drawText(os::winWf() / 2, y, gotoString, mainMenuFont_, menuFontSize, (mainMenuIndex_ == 1) ? &selectedColor : &unselectedColor);
     y += menuFontSize * 2.0f;
     gfx::drawText(os::winWf() / 2, y, "Quit", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 2) ? &selectedColor : &unselectedColor);
+
+    {
+        float versionFontSize = 0.025f * os::windowHeight();
+        float versionMargin = versionFontSize / 5.0f;
+        gfx::Color versionTextColor = { 64, 64, 64, 255 };
+        gfx::drawText(versionMargin, os::winHf() - versionMargin, VERSION_STRING, mainMenuFont_, versionFontSize, &versionTextColor, 0.0f, 1.0f);
+    }
 }
 
 // --------------------------------------------------------------------------------------
