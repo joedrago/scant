@@ -6,6 +6,7 @@
 #include <stdint.h>
 
 #include "Game.h"
+#include "Cutscene.h"
 
 class App
 {
@@ -14,10 +15,9 @@ public:
     {
         VIEW_NONE = 0,
 
-        VIEW_SPLASH,
+        VIEW_CUTSCENE,
         VIEW_MAINMENU,
         VIEW_GAME,
-        VIEW_FINALE,
 
         VIEW_COUNT
     };
@@ -28,14 +28,15 @@ public:
     void update();
     void render();
     void switchView(View view);
+    void playCutscene(const char *sceneName, View after);
     int viewElapsedMS();
 
     void loadResources();
 
-    void splashEnter();
-    void splashLeave();
-    void splashUpdate();
-    void splashRender();
+    void cutsceneEnter();
+    void cutsceneLeave();
+    void cutsceneUpdate();
+    void cutsceneRender();
 
     void mainMenuEnter();
     void mainMenuLeave();
@@ -46,11 +47,6 @@ public:
     void gameLeave();
     void gameUpdate();
     void gameRender();
-
-    void finaleEnter();
-    void finaleLeave();
-    void finaleUpdate();
-    void finaleRender();
 
     typedef void (App::* enterFunction)();
     typedef void (App::* leaveFunction)();
@@ -73,8 +69,9 @@ protected:
     ViewState viewStates_[VIEW_COUNT];
     bool switchedView_;
 
-    // Splash
-    int splashBGM_;
+    // Cutscene
+    Cutscene cutscene_;
+    View afterCutscene_;
 
     // MainMenu
     int mainMenuBGM_;
@@ -87,9 +84,6 @@ protected:
 
     // Game
     Game * game_;
-
-    // Finale
-    int finaleBGM_;
 };
 
 #endif // ifndef APP_H

@@ -620,6 +620,24 @@ void drawText(float pixelX, float pixelY, const char * text, int fontId, float f
     float right = -1000.0f;
     float bottom = -1000.0f;
 
+    {
+        // Get some sensible baselines for ascent / descent
+        char interestingChars[] = { 'M', 'd', 'y', 'g', 'p' }; // TODO: figure out tall and short letters by inspecting font.txt file
+        for (int index = 0; index < sizeof(interestingChars); ++index) {
+            int id = (int)interestingChars[index];
+
+            Font::Glyph * glyph = font->findGlyph(id);
+            if (!glyph)
+                continue;
+
+            float glyphY = glyph->yoffset * scale;
+            float glyphH = glyph->src.h * scale;
+
+            top = min(top, glyphY);
+            bottom = max(bottom, glyphY + glyphH);
+        }
+    }
+
     float x = 0;
     float y = 0;
     for (const char * c = text; *c; ++c) {

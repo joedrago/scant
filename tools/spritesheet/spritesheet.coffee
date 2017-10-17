@@ -6,7 +6,6 @@ pngReader  = require 'png-js'
 pngWriter  = require('pngjs').PNG
 
 gameDir = process.argv.slice(2).shift()
-artDir = path.join(gameDir, "art")
 dataDir = path.join(gameDir, "data")
 
 # TODO: choose a size based on the incoming sprites
@@ -23,6 +22,7 @@ readpng = (filename, cb) ->
     return cb(null, { name: basename, filename: filename, png: png, pixels: pixels })
 
 generatePaddedTilesheet = (tilesheetName, tilePadding, genMetrics, cb) ->
+  artDir = path.join(gameDir, tilesheetName)
   metricsFilename = path.join(dataDir, "#{tilesheetName}.json")
   pngFilename = path.join(dataDir, "#{tilesheetName}.png")
   tiles = fs.readdirSync artDir
@@ -154,6 +154,7 @@ generatePaddedTilesheet = (tilesheetName, tilePadding, genMetrics, cb) ->
 
 
 main = ->
+  generatePaddedTilesheet("csart", 2, true)
   generatePaddedTilesheet("art", 2, true)
 
 main()

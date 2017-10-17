@@ -16,10 +16,10 @@ App::App()
 
     memset(&viewStates_, 0, sizeof(viewStates_));
 
-    viewStates_[VIEW_SPLASH].enter = &App::splashEnter;
-    viewStates_[VIEW_SPLASH].leave = &App::splashLeave;
-    viewStates_[VIEW_SPLASH].update = &App::splashUpdate;
-    viewStates_[VIEW_SPLASH].render = &App::splashRender;
+    viewStates_[VIEW_CUTSCENE].enter = &App::cutsceneEnter;
+    viewStates_[VIEW_CUTSCENE].leave = &App::cutsceneLeave;
+    viewStates_[VIEW_CUTSCENE].update = &App::cutsceneUpdate;
+    viewStates_[VIEW_CUTSCENE].render = &App::cutsceneRender;
 
     viewStates_[VIEW_MAINMENU].enter = &App::mainMenuEnter;
     viewStates_[VIEW_MAINMENU].leave = &App::mainMenuLeave;
@@ -31,18 +31,15 @@ App::App()
     viewStates_[VIEW_GAME].update = &App::gameUpdate;
     viewStates_[VIEW_GAME].render = &App::gameRender;
 
-    viewStates_[VIEW_FINALE].enter = &App::finaleEnter;
-    viewStates_[VIEW_FINALE].leave = &App::finaleLeave;
-    viewStates_[VIEW_FINALE].update = &App::finaleUpdate;
-    viewStates_[VIEW_FINALE].render = &App::finaleRender;
-
     game_ = new Game(this);
     gotoIndex_ = game_->highestLevelReached();
 
 #if _DEBUG
-    switchView(VIEW_MAINMENU);
+    // switchView(VIEW_MAINMENU);
+    playCutscene("intro", VIEW_MAINMENU);
 #else
-    switchView(VIEW_SPLASH);
+    playCutscene("intro", VIEW_MAINMENU);
+    // switchView(VIEW_SPLASH);
 #endif
 }
 
@@ -83,6 +80,13 @@ void App::switchView(App::View view)
     currentViewEnterTime_ = os::mono();
 }
 
+void App::playCutscene(const char *sceneName, View after)
+{
+    cutscene_.startScene(sceneName);
+    afterCutscene_ = after;
+    switchView(VIEW_CUTSCENE);
+}
+
 int App::viewElapsedMS()
 {
     uint64_t diff = os::mono() - currentViewEnterTime_;
@@ -91,8 +95,8 @@ int App::viewElapsedMS()
 
 void App::loadResources()
 {
-    // VIEW_SPLASH
-    splashBGM_ = sound::loadOGG("data/splash.ogg", 1, false);
+    // VIEW_CUTSCENE
+    // splashBGM_ = sound::loadOGG("data/splash.ogg", 1, false);
 
     // VIEW_MAINMENU
     mainMenuBGM_ = sound::loadOGG("data/mainmenu.ogg", 1, true);
@@ -101,57 +105,51 @@ void App::loadResources()
     mainMenuFont_ = gfx::loadFont("yoster");
     mainMenuLogo_ = gfx::loadPNG("data/logo.png");
 
-    // VIEW_FINALE
-    finaleBGM_ = sound::loadOGG("data/finale.ogg", 1, true);
+    cutscene_.loadScenes("csart", "data/scenes.json", mainMenuFont_);
 }
 
 // --------------------------------------------------------------------------------------
 // Splash
 
-#define SPLASH_FADE_IN_TIME 1000
-#define SPLASH_SHOW_TIME 1000
-#define SPLASH_FADE_OUT_TIME 1000
-#define SPLASH_TOTAL_TIME (SPLASH_FADE_IN_TIME + SPLASH_SHOW_TIME + SPLASH_FADE_OUT_TIME)
+// #define SPLASH_FADE_IN_TIME 1000
+// #define SPLASH_SHOW_TIME 1000
+// #define SPLASH_FADE_OUT_TIME 1000
+// #define SPLASH_TOTAL_TIME (SPLASH_FADE_IN_TIME + SPLASH_SHOW_TIME + SPLASH_FADE_OUT_TIME)
 
-void App::splashEnter()
+void App::cutsceneEnter()
 {
-    sound::play(splashBGM_);
 }
 
-void App::splashLeave()
+void App::cutsceneLeave()
 {
-    sound::stop(splashBGM_);
 }
 
-void App::splashUpdate()
+void App::cutsceneUpdate()
 {
-    if ((viewElapsedMS() > SPLASH_TOTAL_TIME)
-        || input::pressed(input::START)
-        || input::pressed(input::ACCEPT)
-        || input::pressed(input::CANCEL))
-    {
-        switchView(VIEW_MAINMENU);
+    if(!cutscene_.update()) {
+        switchView(afterCutscene_);
     }
 }
 
-void App::splashRender()
+void App::cutsceneRender()
 {
-    float fontSize = 0.05f * os::windowHeight();
-    float opacity = 1.0f;
-    uint64_t t = viewElapsedMS();
-    if (t < SPLASH_FADE_IN_TIME) {
-        opacity = os::clamp((float)t / SPLASH_FADE_IN_TIME, 0.0f, 1.0f);
-    } else {
-        t -= SPLASH_FADE_IN_TIME;
-        if (t < SPLASH_SHOW_TIME) {
-            opacity = 1.0;
-        } else {
-            t -= SPLASH_SHOW_TIME;
-            opacity = 1.0f - os::clamp((float)t / SPLASH_FADE_OUT_TIME, 0.0f, 1.0f);
-        }
-    }
-    gfx::Color textColor = { 255, 255, 255, (unsigned char)(opacity * 255.0f) };
-    gfx::drawText(os::winWf() / 2, os::winHf() / 2, "Drago Family Games presents...", mainMenuFont_, fontSize, &textColor);
+    cutscene_.render();
+    // float fontSize = 0.05f * os::windowHeight();
+    // float opacity = 1.0f;
+    // uint64_t t = viewElapsedMS();
+    // if (t < SPLASH_FADE_IN_TIME) {
+    //     opacity = os::clamp((float)t / SPLASH_FADE_IN_TIME, 0.0f, 1.0f);
+    // } else {
+    //     t -= SPLASH_FADE_IN_TIME;
+    //     if (t < SPLASH_SHOW_TIME) {
+    //         opacity = 1.0;
+    //     } else {
+    //         t -= SPLASH_SHOW_TIME;
+    //         opacity = 1.0f - os::clamp((float)t / SPLASH_FADE_OUT_TIME, 0.0f, 1.0f);
+    //     }
+    // }
+    // gfx::Color textColor = { 255, 255, 255, (unsigned char)(opacity * 255.0f) };
+    // gfx::drawText(os::winWf() / 2, os::winHf() / 2, "Drago Family Games presents...", mainMenuFont_, fontSize, &textColor);
 }
 
 // --------------------------------------------------------------------------------------
@@ -271,35 +269,4 @@ void App::gameUpdate()
 void App::gameRender()
 {
     game_->render();
-}
-
-// --------------------------------------------------------------------------------------
-// Finale
-
-void App::finaleEnter()
-{
-    sound::play(finaleBGM_);
-}
-
-void App::finaleLeave()
-{
-    sound::stop(finaleBGM_);
-}
-
-void App::finaleUpdate()
-{
-    if (viewElapsedMS() < 250)
-        return;
-
-    if (input::pressed(input::ACCEPT) || input::pressed(input::CANCEL) || input::pressed(input::START)) {
-        switchView(VIEW_MAINMENU);
-    }
-}
-
-void App::finaleRender()
-{
-    float fontSize = 0.05f * os::windowHeight();
-    gfx::Color textColor = { 255, 0, 255, 255 };
-    gfx::drawText((float)os::windowWidth() / 2, (float)os::windowHeight() / 2, "Insert Finale Here", mainMenuFont_, fontSize, &textColor);
-    gfx::drawText(os::winWf() / 2.0f, (fontSize * 2) + (os::winHf() / 2.0f), "Press any key for main menu", mainMenuFont_, fontSize, &textColor);
 }

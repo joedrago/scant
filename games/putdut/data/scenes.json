@@ -1,0 +1,22 @@
+{
+  "intro": {
+    "frames": [
+      {
+        "fadeIn": 1000,
+        "duration": 2000,
+        "fadeOut": 1000,
+        "centerText": "Drago Games presents..."
+      }
+    ]
+  },
+  "finale": {
+    "frames": [
+      {
+        "fadeIn": 1000,
+        "duration": 0,
+        "fadeOut": 1000,
+        "centerText": "Finale Missing! Press A to continue."
+      }
+    ]
+  }
+}

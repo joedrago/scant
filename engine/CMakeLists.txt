@@ -18,6 +18,8 @@ set(ENGINE_SRCS
     sound/sound.cpp
     sound/sound.h
 
+    cutscene.cpp
+    cutscene.h
     engine.cpp
     engine.h
 )

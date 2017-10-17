@@ -487,7 +487,7 @@ void Game::confirmNextUpdate()
     if (input::pressed(input::ACCEPT)) {
         if ((currentLevelIndex_ + 1) >= levels_.size()) {
             switchLevel(0);
-            app_->switchView(App::VIEW_FINALE);
+            app_->playCutscene("finale", App::VIEW_MAINMENU);
         } else {
             switchLevel(currentLevelIndex_ + 1);
             switchState(STATE_NEWLEVEL);
