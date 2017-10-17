@@ -203,50 +203,6 @@ bool Cutscene::loadScenes(const char * artBasename, const char * scenesFilename,
     }
 
     cJSON_Delete(json);
-#if 0
-    // Replace with loading scenesFilename as JSON and filling this
-    Scene * scene = new Scene;
-    {
-        Frame * frame = new Frame;
-        frame->fadeIn = 500;
-        frame->duration = 3000;
-        frame->fadeOut = 500;
-
-        Render * r = new Render;
-        r->w = 1.0f;
-        r->h = 1.0f;
-        r->x = 0.0f;
-        r->y = 0.0f;
-        r->ax = 0.0f;
-        r->ay = 0.0f;
-        r->color = { 0, 0, 128, 255 };
-        frame->renders.push_back(r);
-
-        r = new Render;
-        r->src = "happy";
-        r->h = 0.1f;
-        r->x = 0.5f;
-        r->y = 0.5f;
-        frame->renders.push_back(r);
-
-        frame->dialogue.push_back("Here is some dialogue. Here is some more.");
-        frame->dialogue.push_back("");
-        frame->dialogue.push_back("Here is some dialogue. Here is some more.");
-        frame->dialogue.push_back("Here is some dialogue. Here is some more.");
-        frame->dialogue.push_back("Here is some dialogue. Here is some more.");
-
-        scene->frames.push_back(frame);
-    }
-    {
-        Frame * frame = new Frame;
-        frame->fadeIn = 1000;
-        frame->duration = 1000;
-        frame->fadeOut = 1000;
-        frame->centerText = "Drago Games presents...";
-        scene->frames.push_back(frame);
-    }
-    scenes_["intro"] = scene;
-#endif // if 0
     return true;
 }
 
