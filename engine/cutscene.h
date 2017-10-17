@@ -52,11 +52,26 @@ public:
         // anchor
         float ax;
         float ay;
+
+        // rotation
+        float r;
+
+        // Animation values
+        int durationAnim;
+        float xAnim;
+        float yAnim;
+        float wAnim;
+        float hAnim;
+        float axAnim;
+        float ayAnim;
+        float rAnim;
     };
 
     struct Frame
     {
         Frame();
+
+        gfx::Color clear;
 
         int fadeIn;
         int duration; // Between fadeIn and fadeOut, starts when dialogue finishes typing. if 0, waits for keypress before fading out

@@ -57,6 +57,12 @@ void update()
                 currButtons_ |= input::CANCEL;
             }
 
+#if defined(_DEBUG)
+            if (state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) {
+                currButtons_ |= input::DEBUG;
+            }
+#endif
+
             if (abs(state.Gamepad.sThumbLX) > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) {
                 if (state.Gamepad.sThumbLX < 0) {
                     currButtons_ |= input::LEFT;
@@ -96,6 +102,11 @@ void update()
         if (GetAsyncKeyState(VK_ESCAPE)) {
             currButtons_ |= input::START;
         }
+#if defined(_DEBUG)
+        if (GetAsyncKeyState('D')) {
+            currButtons_ |= input::DEBUG;
+        }
+#endif
     }
 }
 

@@ -13,7 +13,9 @@ enum Button
 
     START = (1 << 4),
     ACCEPT = (1 << 5),
-    CANCEL = (1 << 6)
+    CANCEL = (1 << 6),
+
+    DEBUG = (1 << 7)
 };
 
 void startup();

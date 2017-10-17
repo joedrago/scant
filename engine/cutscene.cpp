@@ -15,6 +15,16 @@ Cutscene::Render::Render()
     , h(0)
     , ax(0.5f)
     , ay(0.5f)
+    , r(0.0f)
+
+    , durationAnim(0)
+    , xAnim(0.0f)
+    , yAnim(0.0f)
+    , wAnim(0.0f)
+    , hAnim(0.0f)
+    , axAnim(0.0f)
+    , ayAnim(0.0f)
+    , rAnim(0.0f)
 {
     color = { 255, 255, 255, 255 };
 }
@@ -28,6 +38,7 @@ Cutscene::Frame::Frame()
     , dialogueTextSize(0.05f)
     , dialogueSpeed(50)
 {
+    clear = { 0, 0, 0, 255 };
     centerTextColor = { 255, 255, 255, 255 };
     dialogueTextColor = { 255, 255, 255, 255 };
 }
@@ -183,6 +194,7 @@ bool Cutscene::loadScenes(const char * artBasename, const char * scenesFilename,
         for (cJSON * jsonFrame = jsonFrames->child; jsonFrame; jsonFrame = jsonFrame->next) {
             Frame * frame = new Frame;
             scene->frames.push_back(frame);
+            jsonFillColor(jsonFrame, "clear", frame->clear);
             jsonFillInt(jsonFrame, "fadeIn", frame->fadeIn);
             jsonFillInt(jsonFrame, "duration", frame->duration);
             jsonFillInt(jsonFrame, "fadeOut", frame->fadeOut);
@@ -200,6 +212,15 @@ bool Cutscene::loadScenes(const char * artBasename, const char * scenesFilename,
                     jsonFillFloat(jsonRender, "h", render->h);
                     jsonFillFloat(jsonRender, "ax", render->ax);
                     jsonFillFloat(jsonRender, "ay", render->ay);
+                    jsonFillFloat(jsonRender, "r", render->r);
+                    jsonFillInt(jsonRender, "durationAnim", render->durationAnim);
+                    jsonFillFloat(jsonRender, "xAnim", render->xAnim);
+                    jsonFillFloat(jsonRender, "yAnim", render->yAnim);
+                    jsonFillFloat(jsonRender, "wAnim", render->wAnim);
+                    jsonFillFloat(jsonRender, "hAnim", render->hAnim);
+                    jsonFillFloat(jsonRender, "axAnim", render->axAnim);
+                    jsonFillFloat(jsonRender, "ayAnim", render->ayAnim);
+                    jsonFillFloat(jsonRender, "rAnim", render->rAnim);
                 }
             }
             cJSON * jsonDialogue = cJSON_GetObjectItem(jsonFrame, "dialogue");
@@ -313,6 +334,8 @@ void Cutscene::render()
 
     Frame * frame = currentScene_->frames[frameIndex_];
 
+    gfx::draw(0, 0, os::winWf(), os::winHf(), nullptr, &frame->clear);
+
     for (std::vector<Render *>::iterator rit = frame->renders.begin(); rit != frame->renders.end(); ++rit) {
         Render * r = *rit;
         if ((r->w == 0) && (r->h == 0))
@@ -331,20 +354,39 @@ void Cutscene::render()
             continue;
         }
 
-        float x = r->x * os::winWf();
-        float y = r->y * os::winHf();
+        float rx = r->x;
+        float ry = r->y;
+        float rw = r->w;
+        float rh = r->h;
+        float rax = r->ax;
+        float ray = r->ay;
+        float rr = r->r;
+
+        if (r->durationAnim > 0) {
+            float p = os::clamp((float)frameElapsedMS() / (float)r->durationAnim, 0.0f, 1.0f);
+            rx += r->xAnim * p;
+            ry += r->yAnim * p;
+            rw += r->wAnim * p;
+            rh += r->hAnim * p;
+            rax += r->axAnim * p;
+            ray += r->ayAnim * p;
+            rr += r->rAnim * p;
+        }
+
+        float x = rx * os::winWf();
+        float y = ry * os::winHf();
         float w, h;
-        if (r->w == 0.0f) {
-            h = r->h * os::winHf();
+        if (rw == 0.0f) {
+            h = rh * os::winHf();
             w = h * src->h / src->w;
-        } else if (r->h == 0.0f) {
-            w = r->w * os::winWf();
+        } else if (rh == 0.0f) {
+            w = rw * os::winWf();
             h = w * src->w / src->h;
         } else {
-            w = r->w * os::winWf();
-            h = r->h * os::winHf();
+            w = rw * os::winWf();
+            h = rh * os::winHf();
         }
-        gfx::draw(x, y, w, h, src, &r->color, r->ax, r->ay);
+        gfx::draw(x, y, w, h, src, &r->color, rax, ray, rr);
     }
 
     if (frame->dialogue.size() > 0) {

@@ -534,7 +534,9 @@ void Game::idleUpdate()
     enableBGM(true);
 
     if (currentLevel_.win()
-        // || input::pressed(input::CANCEL)
+#if defined(_DEBUG)
+        || input::pressed(input::DEBUG)
+#endif
         )
     {
         switchState(STATE_FANFARE);
