@@ -43,6 +43,12 @@ struct TextureRecord
 static std::vector<TextureRecord> textures_;
 static std::vector<gfx::Font *> fonts_;
 
+struct vec2
+{
+    float x;
+    float y;
+};
+
 struct PosTexColorVertex
 {
     float x;
@@ -531,12 +537,39 @@ void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource * s
     float anchorPixelX = -1 * anchorX * pixelW;
     float anchorPixelY = -1 * anchorY * pixelH;
 
-    float leftPos   = (2.0f * (        (anchorPixelX + pixelX)           / windowW))  - 1.0f;
-    float topPos    = (2.0f * (1.0f - ((anchorPixelY + pixelY)           / windowH))) - 1.0f;
-    float rightPos  = (2.0f * (        (anchorPixelX + pixelX + pixelW)  / windowW))  - 1.0f;
-    float bottomPos = (2.0f * (1.0f - ((anchorPixelY + pixelY + pixelH)) / windowH))  - 1.0f;
+    float leftPixelPos = anchorPixelX + pixelX;
+    float topPixelPos = anchorPixelY + pixelY;
+    float rightPixelPos = anchorPixelX + pixelX + pixelW;
+    float bottomPixelPos = anchorPixelY + pixelY + pixelH;
 
-    // TODO: rotation
+    vec2 pos[4];
+    pos[0].x = leftPixelPos;
+    pos[0].y = bottomPixelPos;
+    pos[1].x = leftPixelPos;
+    pos[1].y = topPixelPos;
+    pos[2].x = rightPixelPos;
+    pos[2].y = bottomPixelPos;
+    pos[3].x = rightPixelPos;
+    pos[3].y = topPixelPos;
+
+    if (r != 0.0f) {
+        float anchorCoordX = leftPixelPos + (anchorX * (rightPixelPos - leftPixelPos));
+        float anchorCoordY = topPixelPos + (anchorY * (bottomPixelPos - topPixelPos));
+
+        float s = sin(r);
+        float c = cos(r);
+
+        for (int i = 0; i < 4; ++i) {
+            vec2 & v = pos[i];
+            v.x -= anchorCoordX;
+            v.y -= anchorCoordY;
+
+            float xnew = v.x * c - v.y * s;
+            float ynew = v.x * s + v.y * c;
+            v.x = xnew + anchorCoordX;
+            v.y = ynew + anchorCoordY;
+        }
+    }
 
     float red, green, blue, alpha;
     if (color) {
@@ -588,10 +621,10 @@ void draw(float pixelX, float pixelY, float pixelW, float pixelH, DrawSource * s
 
 // *INDENT-OFF*
     PosTexColorVertex vertices[] = {
-        { leftPos,  bottomPos, 0.5f,   leftUV,  bottomUV,   red, green, blue, alpha }, // bottom left
-        { leftPos,  topPos,    0.5f,   leftUV,  topUV,      red, green, blue, alpha }, // top left
-        { rightPos, bottomPos, 0.5f,   rightUV, bottomUV,   red, green, blue, alpha }, // bottom right
-        { rightPos, topPos,    0.5f,   rightUV, topUV,      red, green, blue, alpha }  // top right
+        { (2.0f * (pos[0].x / windowW)) - 1.0f, (2.0f * (1.0f - (pos[0].y / windowH))) - 1.0f, 0.5f,   leftUV,  bottomUV,   red, green, blue, alpha }, // bottom left
+        { (2.0f * (pos[1].x / windowW)) - 1.0f, (2.0f * (1.0f - (pos[1].y / windowH))) - 1.0f, 0.5f,   leftUV,  topUV,      red, green, blue, alpha }, // top left
+        { (2.0f * (pos[2].x / windowW)) - 1.0f, (2.0f * (1.0f - (pos[2].y / windowH))) - 1.0f, 0.5f,   rightUV, bottomUV,   red, green, blue, alpha }, // bottom right
+        { (2.0f * (pos[3].x / windowW)) - 1.0f, (2.0f * (1.0f - (pos[3].y / windowH))) - 1.0f, 0.5f,   rightUV, topUV,      red, green, blue, alpha }  // top right
     };
 // *INDENT-ON*
 
