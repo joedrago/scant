@@ -1,14 +1,184 @@
 {
+  // --------------------------------------------------------------------------------
+  // Intro
+
   "intro": {
     "frames": [
+
+      // --------------------------------------------------------------------------------
+      // Basic legalese stuff
       {
         "fadeIn": 1000,
         "duration": 2000,
         "fadeOut": 1000,
         "centerText": "Drago Games presents..."
+      },
+
+      // --------------------------------------------------------------------------------
+      // Intro Story
+
+      {
+        "bgm": "data/intro.ogg",
+        "fadeIn": 1000,
+        "duration": 2000,
+        "fadeOut": 1000,
+        "dialogue": [
+          "Once upon a time... `````````````````````````in a far off land...",
+          "`````````````````````````",
+          "on a dark and stormy night..."
+        ]
+      },
+
+      {
+        "clear": { "r": 175, "g": 235, "b": 255 },
+        "fadeIn": 1000,
+        "duration": 5000,
+        "fadeOut": 1000,
+        "renders": [
+          {
+            "src": "princess",
+
+            "x": 0.50,
+            "y": 0.30,
+            "h": 0.3,
+
+            "durationAnim": 6000,
+            "xAnim": 0.03,
+            "yAnim": 0.01
+          }
+        ],
+        "dialogue": [
+          "There was a princess. ```````````````````````````Her job was to organize",
+          "all of the boxes, and everyone was happy.",
+          "``````````````````````````````````````````````````````",
+          "Until one day..."
+        ]
+      },
+
+      {
+        "clear": { "r": 128, "g": 16, "b": 16 },
+        "fadeIn": 1000,
+        "duration": 5000,
+        "fadeOut": 1000,
+        "renders": [
+          {
+            "src": "doops",
+
+            "x": 0.50,
+            "y": 0.30,
+            "h": 0.3
+          }
+        ],
+        "dialogue": [
+          "A villian named Poops deDoops appeared and",
+          "rearranged all of the boxes in the warehouses!"
+        ]
+      },
+
+      {
+        "clear": { "r": 175, "g": 235, "b": 255 },
+        "fadeIn": 1000,
+        "duration": 5000,
+        "renders": [
+          {
+            "src": "princess",
+
+            "x": 0.30,
+            "y": 0.30,
+            "h": 0.3,
+
+            "durationAnim": 6000,
+            "xAnim": 0.03,
+            "yAnim": 0.01
+          },
+          {
+            "src": "doops",
+
+            "x": 0.75,
+            "y": 0.25,
+            "h": 0.3,
+
+            "durationAnim": 6000,
+            "xAnim": -0.03,
+            "yAnim": 0.01
+          }
+        ],
+        "dialogue": [
+          "You'll never get away with this!",
+          "````````````````````````````````",
+          "HAHA!```````````````````````````````` I'm Poops deDoops! I do what I want!"
+        ]
+      },
+
+      {
+        "clear": { "r": 175, "g": 235, "b": 255 },
+        "duration": 5000,
+        "fadeOut": 1000,
+        "renders": [
+          {
+            "src": "princess",
+
+            "x": 0.33,
+            "y": 0.31,
+            "h": 0.3
+          },
+          {
+            "src": "doops",
+
+            "x": 0.72,
+            "y": 0.26,
+            "h": 0.3,
+
+            "durationAnim": 6000,
+            "rAnim": 0.1
+          },
+          {
+            "src": "putdut",
+
+            "x": 0.30,
+            "y": 1.28,
+            "h": 0.3,
+            "r": 0.1,
+
+            "durationAnim": 1000,
+            "xAnim": 0.25,
+            "yAnim": -1
+          }
+        ],
+        "dialogue": [
+          "Out of nowhere, PutDut, the princess' faithful",
+          "organizer appears! ````````````````He tells Poops deDoops that",
+          "no matter what, chaos will never win!"
+        ]
+      },
+
+      {
+        "clear": { "r": 175, "g": 235, "b": 255 },
+        "fadeIn": 1000,
+        "duration": 5000,
+        "fadeOut": 1000,
+        "renders": [
+          {
+            "src": "putdut",
+
+            "x": 0.50,
+            "y": 0.30,
+            "h": 0.3
+          }
+        ],
+        "dialogue": [
+          "So now it is up to you, `````````````PutDut,````````````` to organize all of",
+          "the boxes across the world, `````````````and restore world peace.",
+          "``````````````````````````",
+          "Good luck! You'll need it!"
+        ]
       }
     ]
   },
+
+  // --------------------------------------------------------------------------------
+  // Finale
+
   "finale": {
     "frames": [
       {

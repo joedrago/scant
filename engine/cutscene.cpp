@@ -179,6 +179,7 @@ bool Cutscene::loadScenes(const char * artBasename, const char * scenesFilename,
     if (!os::readFile(scenesFilename, rawJSON)) {
         assert(0);
     }
+    cJSON_Minify(&rawJSON[0]); // removes comments
 
     cJSON * json = cJSON_Parse(rawJSON.c_str());
     assert(json);
@@ -251,6 +252,10 @@ void Cutscene::startScene(const char * sceneName)
     currentScene_ = it->second;
     bgm_ = -1;
     frameIndex_ = -1;
+#if _DEBUG
+    // Tune here to debug cutscenes
+    frameIndex_ = -1;
+#endif
     nextFrame();
 }
 
@@ -378,10 +383,10 @@ void Cutscene::render()
         float w, h;
         if (rw == 0.0f) {
             h = rh * os::winHf();
-            w = h * src->h / src->w;
+            w = h * src->w / src->h;
         } else if (rh == 0.0f) {
             w = rw * os::winWf();
-            h = w * src->w / src->h;
+            h = w * src->h / src->w;
         } else {
             w = rw * os::winWf();
             h = rh * os::winHf();
