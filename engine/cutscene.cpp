@@ -2,6 +2,7 @@
 
 #include "input/input.h"
 #include "os/os.h"
+#include "sound/sound.h"
 
 #include <assert.h>
 
@@ -33,6 +34,7 @@ Cutscene::Frame::Frame()
 
 Cutscene::Cutscene()
     : currentScene_(nullptr)
+    , bgm_(-1)
 {
 }
 
@@ -64,10 +66,25 @@ bool Cutscene::nextFrame()
     ++frameIndex_;
     if (frameIndex_ >= (int)currentScene_->frames.size()) {
         currentScene_ = nullptr;
-        return false;
+        return end();
+    }
+    Frame * frame = currentScene_->frames[frameIndex_];
+    if (frame->bgm.size() > 0) {
+        int bgm = -1;
+        if (frame->bgm != "-") {
+            bgm = sound::loadOGG(frame->bgm.c_str(), 1, true);
+        }
+        if (bgm_ != bgm) {
+            if (bgm_ != -1) {
+                sound::stop(bgm_);
+            }
+            bgm_ = bgm;
+            if (bgm_ != -1) {
+                sound::play(bgm_);
+            }
+        }
     }
     frameStartTime_ = os::mono();
-    Frame * frame = currentScene_->frames[frameIndex_];
     if (frame->fadeIn) {
         switchState(STATE_FADEIN);
     } else if (frame->dialogue.size() > 0) {
@@ -199,9 +216,9 @@ bool Cutscene::loadScenes(const char * artBasename, const char * scenesFilename,
             jsonFillString(jsonFrame, "centerText", frame->centerText);
             jsonFillColor(jsonFrame, "centerTextColor", frame->centerTextColor);
             jsonFillFloat(jsonFrame, "centerTextSize", frame->centerTextSize);
+            jsonFillString(jsonFrame, "bgm", frame->bgm);
         }
     }
-
     cJSON_Delete(json);
     return true;
 }
@@ -211,17 +228,26 @@ void Cutscene::startScene(const char * sceneName)
     std::map<std::string, Scene *>::iterator it = scenes_.find(sceneName);
     assert(it != scenes_.end());
     currentScene_ = it->second;
+    bgm_ = -1;
     frameIndex_ = -1;
     nextFrame();
+}
+
+bool Cutscene::end()
+{
+    if (bgm_ != -1) {
+        sound::stop(bgm_);
+    }
+    return false;
 }
 
 bool Cutscene::update()
 {
     if (!currentScene_)
-        return false;
+        return end();
 
     if (input::pressed(input::START)) {
-        return false;
+        return end();
     }
 
     Frame * frame = currentScene_->frames[frameIndex_];

@@ -17,6 +17,7 @@ static tsContext * context_;
 
 struct SoundRecord
 {
+    std::string path;
     bool looping;
     int maxActive;
     tsLoadedSound *loadedSound;
@@ -60,11 +61,23 @@ void update()
     }
 }
 
-static int addSoundRecord(int maxActive, bool looping)
+static int findSoundRecord(const char *path)
+{
+    int soundCount = (int)sounds_.size();
+    for(int i = 0; i < soundCount; ++i) {
+        if(sounds_[i].path == path) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+static int addSoundRecord(int maxActive, bool looping, const char *path)
 {
     int id = (int)sounds_.size();
     sounds_.resize(sounds_.size() + 1);
     SoundRecord & sr = sounds_[id];
+    sr.path = path;
     sr.loadedSound = new tsLoadedSound;
     sr.maxActive = maxActive;
     sr.looping = looping;
@@ -73,7 +86,11 @@ static int addSoundRecord(int maxActive, bool looping)
 
 int loadWAV(const char * filename, int maxActive, bool looping)
 {
-    int id = addSoundRecord(maxActive, looping);
+    int id = findSoundRecord(filename);
+    if(id != -1)
+        return id;
+
+    id = addSoundRecord(maxActive, looping, filename);
     SoundRecord & sr = sounds_[id];
     *sr.loadedSound = tsLoadWAV(filename);
     return id;
@@ -81,7 +98,11 @@ int loadWAV(const char * filename, int maxActive, bool looping)
 
 int loadOGG(const char * filename, int maxActive, bool looping)
 {
-    int id = addSoundRecord(maxActive, looping);
+    int id = findSoundRecord(filename);
+    if(id != -1)
+        return id;
+
+    id = addSoundRecord(maxActive, looping, filename);
     SoundRecord & sr = sounds_[id];
     int sampleRate = 44100;
     *sr.loadedSound = tsLoadOGG(filename, &sampleRate);

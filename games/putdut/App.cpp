@@ -109,12 +109,7 @@ void App::loadResources()
 }
 
 // --------------------------------------------------------------------------------------
-// Splash
-
-// #define SPLASH_FADE_IN_TIME 1000
-// #define SPLASH_SHOW_TIME 1000
-// #define SPLASH_FADE_OUT_TIME 1000
-// #define SPLASH_TOTAL_TIME (SPLASH_FADE_IN_TIME + SPLASH_SHOW_TIME + SPLASH_FADE_OUT_TIME)
+// Cutscene
 
 void App::cutsceneEnter()
 {
@@ -134,22 +129,6 @@ void App::cutsceneUpdate()
 void App::cutsceneRender()
 {
     cutscene_.render();
-    // float fontSize = 0.05f * os::windowHeight();
-    // float opacity = 1.0f;
-    // uint64_t t = viewElapsedMS();
-    // if (t < SPLASH_FADE_IN_TIME) {
-    //     opacity = os::clamp((float)t / SPLASH_FADE_IN_TIME, 0.0f, 1.0f);
-    // } else {
-    //     t -= SPLASH_FADE_IN_TIME;
-    //     if (t < SPLASH_SHOW_TIME) {
-    //         opacity = 1.0;
-    //     } else {
-    //         t -= SPLASH_SHOW_TIME;
-    //         opacity = 1.0f - os::clamp((float)t / SPLASH_FADE_OUT_TIME, 0.0f, 1.0f);
-    //     }
-    // }
-    // gfx::Color textColor = { 255, 255, 255, (unsigned char)(opacity * 255.0f) };
-    // gfx::drawText(os::winWf() / 2, os::winHf() / 2, "Drago Family Games presents...", mainMenuFont_, fontSize, &textColor);
 }
 
 // --------------------------------------------------------------------------------------

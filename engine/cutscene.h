@@ -73,6 +73,8 @@ public:
         std::string centerText;
         gfx::Color centerTextColor;
         float centerTextSize;
+
+        std::string bgm;
     };
     typedef std::vector<Frame *> FrameList;
 
@@ -82,6 +84,8 @@ public:
     };
 
 protected:
+    bool end();
+
     int font_;
     gfx::Spritesheet spritesheet_;
     uint64_t frameStartTime_;
@@ -89,6 +93,7 @@ protected:
     Scene * currentScene_;
     State state_;
     int frameIndex_;
+    int bgm_;
     std::map<std::string, Scene *> scenes_;
 };
 

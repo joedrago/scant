@@ -206,9 +206,9 @@ void Game::loadProgress()
     std::string jsonString;
     if (os::readFile("save.json", jsonString)) {
         cJSON * json = cJSON_Parse(jsonString.c_str());
-        if(json && cJSON_IsObject(json)) {
+        if (json && cJSON_IsObject(json)) {
             cJSON * jsonHighestLevelReached_ = cJSON_GetObjectItem(json, "highestLevelReached");
-            if(jsonHighestLevelReached_ && cJSON_IsNumber(jsonHighestLevelReached_)) {
+            if (jsonHighestLevelReached_ && cJSON_IsNumber(jsonHighestLevelReached_)) {
                 highestLevelReached_ = min(jsonHighestLevelReached_->valueint, (int)levels_.size() - 1);
             }
         }
@@ -231,7 +231,7 @@ void Game::switchLevel(int index)
     assert(index < (int)levels_.size());
     currentLevelIndex_ = index;
 
-    if(highestLevelReached_ < index) {
+    if (highestLevelReached_ < index) {
         highestLevelReached_ = index;
         saveProgress();
     }
@@ -391,7 +391,7 @@ bool Game::rewind()
 void Game::newLevelEnter()
 {
     enableBGM(false);
-    sound::play(soundNewLevel_);
+    // sound::play(soundNewLevel_);
 }
 
 void Game::newLevelLeave()
@@ -404,7 +404,7 @@ void Game::newLevelUpdate()
 
 void Game::newLevelRender()
 {
-    if (stateElapsedMS() > 1000) {
+    if (stateElapsedMS() > 200) {
         switchState(STATE_IDLE);
     }
 }
