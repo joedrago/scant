@@ -3,9 +3,9 @@
 #include "os/os.h"
 
 #include <windows.h>
-#include <XInput.h>
+#include <xinput.h>
 
-#pragma comment (lib, "XInput.lib")
+#pragma comment (lib, "xinput9_1_0.lib")
 
 unsigned int prevButtons_;
 unsigned int currButtons_;
