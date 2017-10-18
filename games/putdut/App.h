@@ -61,6 +61,7 @@ public:
         renderFunction render;
     };
 
+    View view() { return currentView_; }
     gfx::DrawSource & logo() { return mainMenuLogo_; }
 
 protected:

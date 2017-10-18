@@ -1,6 +1,7 @@
 #include "Level.h"
 
 Level::Level()
+    : theme_(0)
 {
     memset(cells_, CT_NONE, sizeof(cells_));
 }
@@ -11,7 +12,10 @@ Level::~Level()
 
 void Level::copy(Level & src)
 {
-    title_ = src.title_;
+    name_ = src.name_;
+    nickname_ = src.nickname_;
+    theme_ = src.theme_;
+    intro_ = src.intro_;
     memcpy(cells_, src.cells_, sizeof(cells_));
     startX_ = src.startX_;
     startY_ = src.startY_;

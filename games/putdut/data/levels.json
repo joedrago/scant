@@ -1,6 +1,9 @@
 [
   {
-    "title": "Mario",
+    "name": "City-1",
+    "nickname": "Mario",
+    "theme": 0,
+    "intro": "intro_city",
     "lines": [
       "                                ",
       "                                ",
@@ -29,7 +32,9 @@
     ]
   },
   {
-    "title": "Luigi",
+    "name": "City-2",
+    "nickname": "Luigi",
+    "theme": 0,
     "lines": [
       "                                ",
       "                                ",
@@ -58,7 +63,9 @@
     ]
   },
   {
-    "title": "Robin",
+    "name": "City-3",
+    "nickname": "Robin",
+    "theme": 0,
     "lines": [
       "                                ",
       "                                ",
@@ -87,7 +94,9 @@
     ]
   },
   {
-    "title": "Cloud",
+    "name": "City-4",
+    "nickname": "Cloud",
+    "theme": 0,
     "lines": [
       "                                ",
       "                                ",
@@ -116,7 +125,9 @@
     ]
   },
   {
-    "title": "Jigglypuff",
+    "name": "City-5",
+    "nickname": "Jigglypuff",
+    "theme": 0,
     "lines": [
       "                                ",
       "                                ",
@@ -145,7 +156,9 @@
     ]
   },
   {
-    "title": "Link",
+    "name": "City-6",
+    "nickname": "Link",
+    "theme": 0,
     "lines": [
       "                                ",
       "                                ",
@@ -174,7 +187,9 @@
     ]
   },
   {
-    "title": "Toon Link",
+    "name": "City-7",
+    "nickname": "Toon Link",
+    "theme": 0,
     "lines": [
       "                                ",
       "                                ",
@@ -203,7 +218,9 @@
     ]
   },
   {
-    "title": "Diddy Kong",
+    "name": "City-8",
+    "nickname": "Diddy Kong",
+    "theme": 0,
     "lines": [
       "                                ",
       "                                ",
@@ -232,7 +249,9 @@
     ]
   },
   {
-    "title": "Squirtle",
+    "name": "City-9",
+    "nickname": "Squirtle",
+    "theme": 0,
     "lines": [
       "                                ",
       "                                ",
@@ -261,7 +280,9 @@
     ]
   },
   {
-    "title": "Pichu",
+    "name": "City-F",
+    "nickname": "Pichu",
+    "theme": 0,
     "lines": [
       "                                ",
       "                                ",
@@ -290,7 +311,10 @@
     ]
   },
   {
-    "title": "Pokemon Trainer",
+    "name": "Jungle-1",
+    "nickname": "Pokemon Trainer",
+    "theme": 1,
+    "intro": "intro_jungle",
     "lines": [
       "                                ",
       "                                ",
@@ -319,7 +343,9 @@
     ]
   },
   {
-    "title": "Lucario",
+    "name": "Jungle-2",
+    "nickname": "Lucario",
+    "theme": 1,
     "lines": [
       "                                ",
       "                                ",
@@ -348,7 +374,9 @@
     ]
   },
   {
-    "title": "Mega Man",
+    "name": "Jungle-3",
+    "nickname": "Mega Man",
+    "theme": 1,
     "lines": [
       "                                ",
       "                                ",
@@ -377,7 +405,9 @@
     ]
   },
   {
-    "title": "Greninja",
+    "name": "Jungle-4",
+    "nickname": "Greninja",
+    "theme": 1,
     "lines": [
       "                                ",
       "                                ",
@@ -406,7 +436,9 @@
     ]
   },
   {
-    "title": "Zero Suit Samus",
+    "name": "Jungle-5",
+    "nickname": "Zero Suit Samus",
+    "theme": 1,
     "lines": [
       "                                ",
       "                                ",
@@ -435,7 +467,9 @@
     ]
   },
   {
-    "title": "Young Link",
+    "name": "Jungle-6",
+    "nickname": "Young Link",
+    "theme": 1,
     "lines": [
       "                                ",
       "                                ",
@@ -464,7 +498,9 @@
     ]
   },
   {
-    "title": "Meta Knight",
+    "name": "Jungle-7",
+    "nickname": "Meta Knight",
+    "theme": 1,
     "lines": [
       "                                ",
       "                                ",
@@ -493,7 +529,9 @@
     ]
   },
   {
-    "title": "R.O.B.",
+    "name": "Jungle-8",
+    "nickname": "R.O.B.",
+    "theme": 1,
     "lines": [
       "                                ",
       "                                ",
@@ -522,7 +560,9 @@
     ]
   },
   {
-    "title": "Mewtwo",
+    "name": "Jungle-9",
+    "nickname": "Mewtwo",
+    "theme": 1,
     "lines": [
       "                                ",
       "                                ",
@@ -551,7 +591,9 @@
     ]
   },
   {
-    "title": "Lucina",
+    "name": "Jungle-F",
+    "nickname": "Lucina",
+    "theme": 1,
     "lines": [
       "                                ",
       "                                ",
@@ -580,7 +622,10 @@
     ]
   },
   {
-    "title": "Fox",
+    "name": "Ocean-1",
+    "nickname": "Fox",
+    "theme": 2,
+    "intro": "intro_ocean",
     "lines": [
       "                                ",
       "                                ",
@@ -609,7 +654,9 @@
     ]
   },
   {
-    "title": "King Dedede",
+    "name": "Ocean-2",
+    "nickname": "King Dedede",
+    "theme": 2,
     "lines": [
       "                                ",
       "                                ",
@@ -638,7 +685,9 @@
     ]
   },
   {
-    "title": "Ryu",
+    "name": "Ocean-3",
+    "nickname": "Ryu",
+    "theme": 2,
     "lines": [
       "                                ",
       "                                ",
@@ -667,7 +716,9 @@
     ]
   },
   {
-    "title": "Falco",
+    "name": "Ocean-4",
+    "nickname": "Falco",
+    "theme": 2,
     "lines": [
       "                                ",
       "                                ",
@@ -696,7 +747,9 @@
     ]
   },
   {
-    "title": "Ike",
+    "name": "Ocean-5",
+    "nickname": "Ike",
+    "theme": 2,
     "lines": [
       "                                ",
       "                                ",
@@ -725,7 +778,9 @@
     ]
   },
   {
-    "title": "Wario",
+    "name": "Ocean-6",
+    "nickname": "Wario",
+    "theme": 2,
     "lines": [
       "                                ",
       "                                ",
@@ -754,7 +809,9 @@
     ]
   },
   {
-    "title": "Pac-Man",
+    "name": "Ocean-7",
+    "nickname": "Pac-Man",
+    "theme": 2,
     "lines": [
       "                                ",
       "                                ",
@@ -783,7 +840,9 @@
     ]
   },
   {
-    "title": "Donkey Kong",
+    "name": "Ocean-8",
+    "nickname": "Donkey Kong",
+    "theme": 2,
     "lines": [
       "                                ",
       "                                ",
@@ -812,7 +871,9 @@
     ]
   },
   {
-    "title": "Roy",
+    "name": "Ocean-9",
+    "nickname": "Roy",
+    "theme": 2,
     "lines": [
       "                                ",
       "                                ",
@@ -841,7 +902,9 @@
     ]
   },
   {
-    "title": "Dark Pit",
+    "name": "Ocean-F",
+    "nickname": "Dark Pit",
+    "theme": 2,
     "lines": [
       "                                ",
       "                                ",
@@ -870,7 +933,10 @@
     ]
   },
   {
-    "title": "Pikachu",
+    "name": "Forest-1",
+    "nickname": "Pikachu",
+    "theme": 3,
+    "intro": "intro_forest",
     "lines": [
       "                                ",
       "                                ",
@@ -899,7 +965,9 @@
     ]
   },
   {
-    "title": "Ness",
+    "name": "Forest-2",
+    "nickname": "Ness",
+    "theme": 3,
     "lines": [
       "                                ",
       "                                ",
@@ -928,7 +996,9 @@
     ]
   },
   {
-    "title": "Peach",
+    "name": "Forest-3",
+    "nickname": "Peach",
+    "theme": 3,
     "lines": [
       "                                ",
       "                                ",
@@ -957,7 +1027,9 @@
     ]
   },
   {
-    "title": "Ganondorf",
+    "name": "Forest-4",
+    "nickname": "Ganondorf",
+    "theme": 3,
     "lines": [
       "                                ",
       "                                ",
@@ -986,7 +1058,9 @@
     ]
   },
   {
-    "title": "Rosalina",
+    "name": "Forest-5",
+    "nickname": "Rosalina",
+    "theme": 3,
     "lines": [
       "                                ",
       "                                ",
@@ -1015,7 +1089,9 @@
     ]
   },
   {
-    "title": "Ivysaur",
+    "name": "Forest-6",
+    "nickname": "Ivysaur",
+    "theme": 3,
     "lines": [
       "                                ",
       "                                ",
@@ -1044,7 +1120,9 @@
     ]
   },
   {
-    "title": "Pit",
+    "name": "Forest-7",
+    "nickname": "Pit",
+    "theme": 3,
     "lines": [
       "                                ",
       "                                ",
@@ -1073,7 +1151,9 @@
     ]
   },
   {
-    "title": "Sonic",
+    "name": "Forest-8",
+    "nickname": "Sonic",
+    "theme": 3,
     "lines": [
       "                                ",
       "                                ",
@@ -1102,7 +1182,9 @@
     ]
   },
   {
-    "title": "Snake",
+    "name": "Forest-9",
+    "nickname": "Snake",
+    "theme": 3,
     "lines": [
       "                                ",
       "                                ",
@@ -1131,7 +1213,9 @@
     ]
   },
   {
-    "title": "Dr. Mario",
+    "name": "Forest-F",
+    "nickname": "Dr. Mario",
+    "theme": 3,
     "lines": [
       "                                ",
       "                                ",
@@ -1160,7 +1244,10 @@
     ]
   },
   {
-    "title": "Wolf",
+    "name": "Desert-1",
+    "nickname": "Wolf",
+    "theme": 4,
+    "intro": "intro_desert",
     "lines": [
       "                                ",
       "                                ",
@@ -1189,7 +1276,9 @@
     ]
   },
   {
-    "title": "Little Mac",
+    "name": "Desert-2",
+    "nickname": "Little Mac",
+    "theme": 4,
     "lines": [
       "                                ",
       "                                ",
@@ -1218,7 +1307,9 @@
     ]
   },
   {
-    "title": "Wii Fit Trainer",
+    "name": "Desert-3",
+    "nickname": "Wii Fit Trainer",
+    "theme": 4,
     "lines": [
       "                                ",
       "                                ",
@@ -1247,7 +1338,9 @@
     ]
   },
   {
-    "title": "Lucas",
+    "name": "Desert-4",
+    "nickname": "Lucas",
+    "theme": 4,
     "lines": [
       "                                ",
       "                                ",
@@ -1276,7 +1369,9 @@
     ]
   },
   {
-    "title": "Yoshi",
+    "name": "Desert-5",
+    "nickname": "Yoshi",
+    "theme": 4,
     "lines": [
       "                                ",
       "                                ",
@@ -1305,7 +1400,9 @@
     ]
   },
   {
-    "title": "Marth",
+    "name": "Desert-6",
+    "nickname": "Marth",
+    "theme": 4,
     "lines": [
       "                                ",
       "                                ",
@@ -1334,7 +1431,9 @@
     ]
   },
   {
-    "title": "Olimar",
+    "name": "Desert-7",
+    "nickname": "Olimar",
+    "theme": 4,
     "lines": [
       "                                ",
       "                                ",
@@ -1363,7 +1462,9 @@
     ]
   },
   {
-    "title": "Kirby",
+    "name": "Desert-8",
+    "nickname": "Kirby",
+    "theme": 4,
     "lines": [
       "                                ",
       "                                ",
@@ -1392,7 +1493,9 @@
     ]
   },
   {
-    "title": "Duck Hunt",
+    "name": "Desert-9",
+    "nickname": "Duck Hunt",
+    "theme": 4,
     "lines": [
       "                                ",
       "                                ",
@@ -1421,7 +1524,9 @@
     ]
   },
   {
-    "title": "Samus",
+    "name": "Desert-F",
+    "nickname": "Samus",
+    "theme": 4,
     "lines": [
       "                                ",
       "                                ",
@@ -1450,7 +1555,10 @@
     ]
   },
   {
-    "title": "Ice Climbers",
+    "name": "Space-1",
+    "nickname": "Ice Climbers",
+    "theme": 5,
+    "intro": "intro_space",
     "lines": [
       "                                ",
       "                                ",
@@ -1479,7 +1587,9 @@
     ]
   },
   {
-    "title": "Captain Falcon",
+    "name": "Space-2",
+    "nickname": "Captain Falcon",
+    "theme": 5,
     "lines": [
       "                                ",
       "                                ",
@@ -1508,7 +1618,9 @@
     ]
   },
   {
-    "title": "Mr. Game & Watch",
+    "name": "Space-3",
+    "nickname": "Mr. Game & Watch",
+    "theme": 5,
     "lines": [
       "                                ",
       "                                ",
@@ -1537,7 +1649,9 @@
     ]
   },
   {
-    "title": "Sheik",
+    "name": "Space-4",
+    "nickname": "Sheik",
+    "theme": 5,
     "lines": [
       "                                ",
       "                                ",
@@ -1566,7 +1680,9 @@
     ]
   },
   {
-    "title": "Charizard",
+    "name": "Space-5",
+    "nickname": "Charizard",
+    "theme": 5,
     "lines": [
       "                                ",
       "                                ",
@@ -1595,7 +1711,9 @@
     ]
   },
   {
-    "title": "Palutena",
+    "name": "Space-6",
+    "nickname": "Palutena",
+    "theme": 5,
     "lines": [
       "                                ",
       "                                ",
@@ -1624,7 +1742,9 @@
     ]
   },
   {
-    "title": "Villager",
+    "name": "Space-7",
+    "nickname": "Villager",
+    "theme": 5,
     "lines": [
       "                                ",
       "                                ",
@@ -1653,7 +1773,9 @@
     ]
   },
   {
-    "title": "Bowser Jr.",
+    "name": "Space-8",
+    "nickname": "Bowser Jr.",
+    "theme": 5,
     "lines": [
       "                                ",
       "                                ",
@@ -1682,7 +1804,9 @@
     ]
   },
   {
-    "title": "Bowser",
+    "name": "Space-9",
+    "nickname": "Bowser",
+    "theme": 5,
     "lines": [
       "                                ",
       "                                ",
@@ -1711,7 +1835,9 @@
     ]
   },
   {
-    "title": "Zelda",
+    "name": "Space-F",
+    "nickname": "Zelda",
+    "theme": 5,
     "lines": [
       "                                ",
       "                                ",

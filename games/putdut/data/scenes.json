@@ -177,6 +177,81 @@
   },
 
   // --------------------------------------------------------------------------------
+  // Level Intros
+
+  "intro_city": {
+    "frames": [
+      {
+        "bgm": "data/newworld.ogg",
+        "fadeIn": 500,
+        "duration": 1000,
+        "fadeOut": 500,
+        "centerText": "The City"
+      }
+    ]
+  },
+
+  "intro_ocean": {
+    "frames": [
+      {
+        "bgm": "data/newworld.ogg",
+        "fadeIn": 500,
+        "duration": 1000,
+        "fadeOut": 500,
+        "centerText": "The Ocean"
+      }
+    ]
+  },
+
+  "intro_jungle": {
+    "frames": [
+      {
+        "bgm": "data/newworld.ogg",
+        "fadeIn": 500,
+        "duration": 1000,
+        "fadeOut": 500,
+        "centerText": "The Jungle"
+      }
+    ]
+  },
+
+  "intro_desert": {
+    "frames": [
+      {
+        "bgm": "data/newworld.ogg",
+        "fadeIn": 500,
+        "duration": 1000,
+        "fadeOut": 500,
+        "centerText": "The Desert"
+      }
+    ]
+  },
+
+  "intro_forest": {
+    "frames": [
+      {
+        "bgm": "data/newworld.ogg",
+        "fadeIn": 500,
+        "duration": 1000,
+        "fadeOut": 500,
+        "centerText": "The Forest"
+      }
+    ]
+  },
+
+  "intro_space": {
+    "frames": [
+      {
+        "bgm": "data/newworld.ogg",
+        "fadeIn": 1000,
+        "duration": 2000,
+        "fadeOut": 1000,
+        "centerText": "Space"
+      }
+    ]
+  },
+
+  // --------------------------------------------------------------------------------
   // Finale
 
   "finale": {

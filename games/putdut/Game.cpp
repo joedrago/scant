@@ -84,6 +84,8 @@ void Game::update()
         if (stateFuncs_[currentState_].update) {
             ((*this).*stateFuncs_[currentState_].update)();
         }
+        if (app_->view() != App::VIEW_GAME)
+            break;
     } while (switchedState_);
 }
 
@@ -135,7 +137,9 @@ void Game::loadResources()
     sheet.load("art");
     sheet.findCycle("wall", artWalls_);
     sheet.findCycle("floor", artFloors_);
-    sheet.findSprite("dest", artDest_);
+    sheet.findCycle("destTop", artDestTops_);
+    sheet.findCycle("destBox", artDestBoxes_);
+    sheet.findSprite("destBottom", artDestBottom_);
     sheet.findSprite("happy", happyFace_);
     sheet.findCycle("box", artBoxes_);
 
@@ -170,11 +174,25 @@ void Game::loadLevels()
     if (cJSON_IsArray(json)) {
         cJSON * child = json->child;
         for (; child != nullptr; child = child->next) {
-            // const char * title = jsonGetString(child, "title");
-            std::string title;
-            cJSON * jsonTitle = cJSON_GetObjectItem(child, "title");
-            if (cJSON_IsString(jsonTitle)) {
-                title = jsonTitle->valuestring;
+            std::string name;
+            cJSON * jsonName = cJSON_GetObjectItem(child, "name");
+            if (cJSON_IsString(jsonName)) {
+                name = jsonName->valuestring;
+            }
+            std::string nickname;
+            cJSON * jsonNickname = cJSON_GetObjectItem(child, "nickname");
+            if (cJSON_IsString(jsonNickname)) {
+                nickname = jsonNickname->valuestring;
+            }
+            std::string intro;
+            cJSON * jsonIntro = cJSON_GetObjectItem(child, "intro");
+            if (cJSON_IsString(jsonIntro)) {
+                intro = jsonIntro->valuestring;
+            }
+            cJSON * jsonTheme = cJSON_GetObjectItem(child, "theme");
+            int theme = 0;
+            if (jsonTheme && cJSON_IsNumber(jsonTheme)) {
+                theme = jsonTheme->valueint;
             }
             cJSON * jsonLines = cJSON_GetObjectItem(child, "lines");
             if (jsonLines && cJSON_IsArray(jsonLines)) {
@@ -185,8 +203,11 @@ void Game::loadLevels()
                 }
 
                 Level * level = new Level();
+                level->theme_ = theme;
                 if (level->parse(lines)) {
-                    level->title_ = title;
+                    level->name_ = name;
+                    level->nickname_ = nickname;
+                    level->intro_ = intro;
                     levels_.push_back(level);
                 } else {
                     assert(0);
@@ -255,7 +276,7 @@ void Game::resetLevel()
 
 void Game::enableBGM(bool playing)
 {
-    os::printf("enableBGM(%s)\n", playing ? "true" : "false");
+    // os::printf("enableBGM(%s)\n", playing ? "true" : "false");
     if (bgmPlaying_ != playing) {
         bgmPlaying_ = playing;
         if (bgmPlaying_) {
@@ -390,8 +411,7 @@ bool Game::rewind()
 
 void Game::newLevelEnter()
 {
-    enableBGM(false);
-    // sound::play(soundNewLevel_);
+    playedIntro_ = false;
 }
 
 void Game::newLevelLeave()
@@ -400,13 +420,18 @@ void Game::newLevelLeave()
 
 void Game::newLevelUpdate()
 {
+    if (!playedIntro_) {
+        playedIntro_ = true;
+        if (currentLevel_.intro_.size() > 0) {
+            app_->playCutscene(currentLevel_.intro_.c_str(), App::VIEW_GAME);
+            return;
+        }
+    }
+    switchState(STATE_IDLE);
 }
 
 void Game::newLevelRender()
 {
-    if (stateElapsedMS() > 200) {
-        switchState(STATE_IDLE);
-    }
 }
 
 // --------------------------------------------------------------------------------------
@@ -486,8 +511,8 @@ void Game::confirmNextUpdate()
 {
     if (input::pressed(input::ACCEPT)) {
         if ((currentLevelIndex_ + 1) >= levels_.size()) {
-            switchLevel(0);
             app_->playCutscene("finale", App::VIEW_MAINMENU);
+            switchLevel(0);
         } else {
             switchLevel(currentLevelIndex_ + 1);
             switchState(STATE_NEWLEVEL);
@@ -647,8 +672,8 @@ void Game::renderLevel()
     // Draw Titles (bottom corners)
     char title1[256];
     char title2[256];
-    sprintf(title1, "Level %d", currentLevelIndex_ + 1);
-    sprintf(title2, "\"%s\"", currentLevel_.title_.c_str());
+    sprintf(title1, "%s", currentLevel_.name_.c_str());
+    sprintf(title2, "\"%s\"", currentLevel_.nickname_.c_str());
     gfx::Color textColor = { 192, 192, 192, 255 };
     gfx::drawText(margin, os::winHf() - margin, title1, font_, fontSize, &textColor, 0.0f, 1.0f);
     gfx::drawText(os::winWf() - margin, os::winHf() - margin, title2, font_, fontSize, &textColor, 1.0f, 1.0f);
@@ -659,21 +684,26 @@ void Game::renderLevel()
             float y = gameOffsetY_ + (j * cellSize_);
             Level::Cell & cell = currentLevel_.cells_[i][j];
             if (cell.wall_ || cell.floor_) {
-                gfx::draw(x, y, cellSize_, cellSize_, &artFloors_[0]);
+                gfx::draw(x, y, cellSize_, cellSize_, &artFloors_[currentLevel_.theme_]);
+            }
+            if (cell.dest_) {
+                gfx::Color faded = { 255, 255, 255, 255 };
+                gfx::draw(x, y, cellSize_, cellSize_, &artDestBottom_, &faded);
             }
             if (cell.box_) {
                 if (!moving_
                     || (((i != moveAction_.boxX_) || (j != moveAction_.boxY_)) && ((i != moveAction_.boxTravelX_) || (j != moveAction_.boxTravelY_))))
                 {
-                    gfx::draw(x, y, cellSize_, cellSize_, &artBoxes_[0]);
+                    // gfx::Color boxOpacity = { 255, 255, 255, cell.dest_ ? (unsigned char)128 : (unsigned char)255 };
+                    gfx::DrawSource * src = &artBoxes_[currentLevel_.theme_];
+                    if (cell.dest_) {
+                        src = &artDestBoxes_[currentLevel_.theme_];
+                    }
+                    gfx::draw(x, y, cellSize_, cellSize_, src);
                 }
             }
-            if (cell.dest_) {
-                gfx::Color faded = { 255, 255, 255, 128 };
-                gfx::draw(x, y, cellSize_, cellSize_, &artDest_, &faded);
-            }
             if (cell.wall_) {
-                gfx::draw(x, y, cellSize_, cellSize_, &artWalls_[0]);
+                gfx::draw(x, y, cellSize_, cellSize_, &artWalls_[currentLevel_.theme_]);
             }
         }
     }
@@ -682,7 +712,7 @@ void Game::renderLevel()
         float p = os::clamp((float)stateElapsedMS() / (float)walkSpeed_, 0.0f, 1.0f);
         float x, y;
         calcLerpDraw(p, moveAction_.boxX_, moveAction_.boxY_, moveAction_.boxTravelX_, moveAction_.boxTravelY_, x, y);
-        gfx::draw(x, y, cellSize_, cellSize_, &artBoxes_[0]);
+        gfx::draw(x, y, cellSize_, cellSize_, &artBoxes_[currentLevel_.theme_]);
     }
 
     gfx::DrawSource * playerSrc = &idleSources_[playerFacing_];
@@ -691,4 +721,15 @@ void Game::renderLevel()
         playerSrc = &walkCycles_[playerFacing_][playerDrawIndex_];
     }
     gfx::draw(playerDrawX_, playerDrawY_, cellSize_, cellSize_, playerSrc);
+
+    for (int j = 0; j < Level::MAX_H; ++j) {
+        for (int i = 0; i < Level::MAX_W; ++i) {
+            float x = gameOffsetX_ + (i * cellSize_);
+            float y = gameOffsetY_ + (j * cellSize_);
+            Level::Cell & cell = currentLevel_.cells_[i][j];
+            if (cell.dest_) {
+                gfx::draw(x, y, cellSize_, cellSize_, &artDestTops_[cell.box_ ? 1 : 0]);
+            }
+        }
+    }
 }

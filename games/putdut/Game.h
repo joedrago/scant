@@ -153,7 +153,9 @@ protected:
     bool bgmPlaying_;
     gfx::Cycle artWalls_;
     gfx::Cycle artFloors_;
-    gfx::DrawSource artDest_;
+    gfx::Cycle artDestTops_;
+    gfx::Cycle artDestBoxes_;
+    gfx::DrawSource artDestBottom_;
     gfx::Cycle artBoxes_;
     gfx::DrawSource idleSources_[DIRECTION_COUNT];
     gfx::Cycle walkCycles_[DIRECTION_COUNT];
@@ -175,6 +177,7 @@ protected:
     float playerDrawX_;
     float playerDrawY_;
     bool moving_;
+    bool playedIntro_;
     MoveAction moveAction_;
     std::vector<MoveAction> undo_;
     int playerDrawIndex_;

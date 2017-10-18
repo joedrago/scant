@@ -35,8 +35,8 @@ App::App()
     gotoIndex_ = game_->highestLevelReached();
 
 #if _DEBUG
-    // switchView(VIEW_MAINMENU);
-    playCutscene("intro", VIEW_MAINMENU);
+    switchView(VIEW_GAME);
+    // playCutscene("intro", VIEW_MAINMENU);
 #else
     playCutscene("intro", VIEW_MAINMENU);
     // switchView(VIEW_SPLASH);
@@ -134,6 +134,16 @@ void App::cutsceneRender()
 // --------------------------------------------------------------------------------------
 // MainMenu
 
+enum MainMenuChoice
+{
+    MMC_CONTINUE = 0,
+    MMC_GO,
+    MMC_INTRO,
+    MMC_QUIT,
+
+    MMC_COUNT
+};
+
 void App::mainMenuEnter()
 {
     mainMenuIndex_ = 0;
@@ -156,7 +166,7 @@ void App::mainMenuUpdate()
         sound::play(mainMenuSfxLow_);
         --mainMenuIndex_;
         if (mainMenuIndex_ < 0)
-            mainMenuIndex_ = 2;
+            mainMenuIndex_ = MMC_COUNT - 1;
     }
 
     if (mainMenuIndex_ == 1) {
@@ -174,20 +184,23 @@ void App::mainMenuUpdate()
 
     if (input::pressed(input::DOWN)) {
         sound::play(mainMenuSfxLow_);
-        mainMenuIndex_ = (mainMenuIndex_ + 1) % 3;
+        mainMenuIndex_ = (mainMenuIndex_ + 1) % MMC_COUNT;
     }
 
     if (input::pressed(input::ACCEPT)) {
-        sound::play(mainMenuSfxHigh_);
+        // sound::play(mainMenuSfxHigh_);
         switch (mainMenuIndex_) {
-            case 0: // Continue
+            case MMC_CONTINUE:
                 switchView(VIEW_GAME);
                 break;
-            case 1: // Go
+            case MMC_GO:
                 game_->switchLevel(gotoIndex_);
                 switchView(VIEW_GAME);
                 break;
-            case 2: // Quit
+            case MMC_INTRO:
+                playCutscene("intro", VIEW_MAINMENU);
+                break;
+            case MMC_QUIT:
                 os::quit();
                 break;
         }
@@ -208,16 +221,24 @@ void App::mainMenuRender()
         selectedColor = { 234, 77, 60, 255 };
     }
     float y = os::windowHeight() / 2.0f;
-    gfx::drawText(os::winWf() / 2, y, "Continue", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 0) ? &selectedColor : &unselectedColor);
+
+    gfx::drawText(os::winWf() / 2, y, "Continue", mainMenuFont_, menuFontSize, (mainMenuIndex_ == MMC_CONTINUE) ? &selectedColor : &unselectedColor);
     y += menuFontSize * 2.0f;
 
-    char gotoString[1024];
+    char gotoString1[512];
+    char gotoString2[512];
     Level * level =  game_->getLevel(gotoIndex_);
-    sprintf(gotoString, "< Go: %d - \"%s\"", gotoIndex_ + 1, level->title_.c_str());
-
-    gfx::drawText(os::winWf() / 2, y, gotoString, mainMenuFont_, menuFontSize, (mainMenuIndex_ == 1) ? &selectedColor : &unselectedColor);
+    sprintf(gotoString1, "< Go: %s >", level->name_.c_str());
+    sprintf(gotoString2, "\"%s\"", level->nickname_.c_str());
+    gfx::drawText(os::winWf() / 2, y, gotoString1, mainMenuFont_, menuFontSize, (mainMenuIndex_ == MMC_GO) ? &selectedColor : &unselectedColor);
+    y += menuFontSize * 1.2f;
+    gfx::drawText(os::winWf() / 2, y, gotoString2, mainMenuFont_, menuFontSize, (mainMenuIndex_ == MMC_GO) ? &selectedColor : &unselectedColor);
     y += menuFontSize * 2.0f;
-    gfx::drawText(os::winWf() / 2, y, "Quit", mainMenuFont_, menuFontSize, (mainMenuIndex_ == 2) ? &selectedColor : &unselectedColor);
+
+    gfx::drawText(os::winWf() / 2, y, "Watch Intro", mainMenuFont_, menuFontSize, (mainMenuIndex_ == MMC_INTRO) ? &selectedColor : &unselectedColor);
+    y += menuFontSize * 2.0f;
+
+    gfx::drawText(os::winWf() / 2, y, "Quit", mainMenuFont_, menuFontSize, (mainMenuIndex_ == MMC_QUIT) ? &selectedColor : &unselectedColor);
 
     {
         float versionFontSize = 0.025f * os::windowHeight();

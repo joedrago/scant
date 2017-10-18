@@ -8,8 +8,8 @@ static std::string windowName_ = "Scant";
 static bool windowFullscreen_ = true;
 static HINSTANCE hinstance_ = nullptr;
 static HWND hwnd_ = nullptr;
-static int windowWidth_ = 1280;
-static int windowHeight_ = 720;
+static int windowWidth_ = 1920;
+static int windowHeight_ = 1080;
 static bool hasFocus_ = false;
 
 static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

@@ -47,11 +47,13 @@ public:
         }
     };
 
-    std::string title_;
+    std::string name_;
+    std::string nickname_;
+    std::string intro_;
     Cell cells_[MAX_W][MAX_H];
     int startX_;
     int startY_;
-    // TODO: add box positions
+    int theme_;
 };
 
 #endif // ifndef LEVEL_H
